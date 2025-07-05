@@ -20,7 +20,8 @@ public class TelaEstoque extends JFrame
 
     private JPanel mainPanel;
 
-    public TelaEstoque(Estoque stock) {
+    public TelaEstoque(Estoque stock)
+    {
         setTitle("Controle de Estoque");
         setSize(600, 800);
         setLocationRelativeTo(null);
@@ -49,6 +50,8 @@ public class TelaEstoque extends JFrame
         addButton.addActionListener(e -> 
         {
             System.out.println("Alterando Estoque");
+            TelaEditaEstoque telaEditaEstoque = new TelaEditaEstoque(TelaEstoque.this, stock);
+            telaEditaEstoque.setVisible(true);
         });
 
         JButton removeButton = createCustomButton("Voltar", new Color(220, 53, 69));
@@ -68,7 +71,8 @@ public class TelaEstoque extends JFrame
         add(buttonPanel, BorderLayout.SOUTH);
     }
 
-    public void carregarProdutos(Map<Integer, ProdutoEmEstoque> productsStock) {
+    public void loadProducts(Map<Integer, ProdutoEmEstoque> productsStock)
+    {
         mainPanel.removeAll();
 
         JLabel titleLabel = new JLabel("Controle de Estoque");
@@ -79,20 +83,23 @@ public class TelaEstoque extends JFrame
 
         // Agrupar produtos por categoria
         Map<String, List<ProdutoEmEstoque>> categorias = new HashMap<>();
-        for (ProdutoEmEstoque pe : productsStock.values()) {
+        for (ProdutoEmEstoque pe : productsStock.values())
+        {
             String tipo = pe.getProduct().getType();
             categorias.computeIfAbsent(tipo, k -> new ArrayList<>()).add(pe);
         }
 
         // Adicionar seções por categoria
-        for (Map.Entry<String, List<ProdutoEmEstoque>> entry : categorias.entrySet()) {
+        for (Map.Entry<String, List<ProdutoEmEstoque>> entry : categorias.entrySet())
+        {
             String tipo = entry.getKey();
             List<ProdutoEmEstoque> lista = entry.getValue();
 
             Object[][] dados = new Object[lista.size()][5];
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
-            for (int i = 0; i < lista.size(); i++) {
+            for (int i = 0; i < lista.size(); i++)
+            {
                 Produto p = lista.get(i).getProduct();
                 dados[i][0] = p.getCode();
                 dados[i][1] = p.getName();
@@ -100,16 +107,17 @@ public class TelaEstoque extends JFrame
                 dados[i][3] = lista.get(i).getAmountStock();
 
                 LocalDate validade = p.getValidity();
-                dados[i][4] = (validade != null) ? validade.format(formatter) : "—";            }
+                dados[i][4] = (validade != null) ? validade.format(formatter) : "—";            
+            }
 
-            mainPanel.add(criarSecaoCategoria(tipo, dados));
+            mainPanel.add(createCategory(tipo, dados));
         }
 
         mainPanel.revalidate();
         mainPanel.repaint();
     }
 
-    private JPanel criarSecaoCategoria(String titulo, Object[][] dados)
+    private JPanel createCategory(String titulo, Object[][] dados)
     {
         JPanel panel = new JPanel();
         panel.setLayout(new BorderLayout());
@@ -166,7 +174,8 @@ public class TelaEstoque extends JFrame
         return panel;
     }
 
-    private JButton createCustomButton(String text, Color bg) {
+    private JButton createCustomButton(String text, Color bg)
+    {
         JButton button = new JButton(text);
         button.setBackground(bg);
         button.setForeground(Color.WHITE);

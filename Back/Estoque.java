@@ -66,6 +66,21 @@ public class Estoque
         return (productsStock.containsKey(code)) ?  productsStock.get(code).getAmountStock() : 0;
     }
 
+    public String getProductName(int code)
+    {
+        if (isProductInStock(code))
+        {
+            return productsStock.get(code).getProduct().getName();
+        }
+        else
+            return null;
+    }
+
+    public boolean isProductInStock(int code)
+    {
+        return (productsStock.containsKey(code)) ?  true : false;
+    }
+
     public void listarProdutos()
     {
         if (productsStock.isEmpty()) {

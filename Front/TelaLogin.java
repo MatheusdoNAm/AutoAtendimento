@@ -135,8 +135,8 @@ public class TelaLogin extends JDialog
         String enteredUser = userTextField.getText();
         String enteredPass = new String(passwordField.getPassword());
 
-        String standUser = "admin";
-        String standPass = "0000";
+        String standUser = "";
+        String standPass = "";
 
         if (enteredUser.equals(standUser) && enteredPass.equals(standPass))
         {

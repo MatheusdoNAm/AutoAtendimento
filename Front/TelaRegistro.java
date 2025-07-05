@@ -55,18 +55,18 @@ public class TelaRegistro extends JDialog
         JPanel formPanel = new JPanel(new GridBagLayout());
         formPanel.setBackground(new Color(197,202,196));
 
-        GridBagConstraints gbcItem = new GridBagConstraints();
-        gbcItem.insets = new Insets(5, 5, 5, 5);
+        GridBagConstraints gbcForm = new GridBagConstraints();
+        gbcForm.insets = new Insets(5, 5, 5, 5);
 
         // -- Code Label --
         JLabel codeLabel = new JLabel("Código:");
         codeLabel.setFont(new Font("Arial", Font.PLAIN, 20));
-        gbcItem.gridy = 0;
-        gbcItem.anchor = GridBagConstraints.WEST; 
-        gbcItem.gridwidth = GridBagConstraints.REMAINDER; 
-        gbcItem.fill = GridBagConstraints.HORIZONTAL; 
-        gbcItem.weightx = 1.0;
-        formPanel.add(codeLabel, gbcItem);
+        gbcForm.gridy = 0;
+        gbcForm.anchor = GridBagConstraints.WEST; 
+        gbcForm.gridwidth = GridBagConstraints.REMAINDER; 
+        gbcForm.fill = GridBagConstraints.HORIZONTAL; 
+        gbcForm.weightx = 1.0;
+        formPanel.add(codeLabel, gbcForm);
 
          // -- Code TextField --
         codeTextField = new JTextField();
@@ -74,18 +74,18 @@ public class TelaRegistro extends JDialog
         codeTextField.setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED));
         codeTextField.setFont(new Font("Arial", Font.PLAIN, 18));
         codeTextField.setPreferredSize(new Dimension(0, 25));
-        gbcItem.gridy = 1;
-        formPanel.add(codeTextField, gbcItem);
+        gbcForm.gridy = 1;
+        formPanel.add(codeTextField, gbcForm);
 
-        gbcItem.insets = new Insets(20, 5, 5, 5);
+        gbcForm.insets = new Insets(20, 5, 5, 5);
 
         // -- Name Label --
         JLabel nameLabel = new JLabel("Nome:");
         nameLabel.setFont(new Font("Arial", Font.PLAIN, 20));
-        gbcItem.gridy = 2;
-        formPanel.add(nameLabel, gbcItem);
+        gbcForm.gridy = 2;
+        formPanel.add(nameLabel, gbcForm);
 
-        gbcItem.insets = new Insets(5, 5, 5, 5);
+        gbcForm.insets = new Insets(5, 5, 5, 5);
 
         // -- Name TextField --
         nameTextField = new JTextField();
@@ -93,35 +93,35 @@ public class TelaRegistro extends JDialog
         nameTextField.setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED));
         nameTextField.setFont(new Font("Arial", Font.PLAIN, 18));
         nameTextField.setPreferredSize(new Dimension(0, 25));
-        gbcItem.gridy = 3;
-        formPanel.add(nameTextField, gbcItem);
+        gbcForm.gridy = 3;
+        formPanel.add(nameTextField, gbcForm);
 
-        gbcItem.insets = new Insets(20, 5, 5, 5);
+        gbcForm.insets = new Insets(20, 5, 5, 5);
 
         // -- Type Label --
         JLabel typeLabel = new JLabel("Tipo:");
         typeLabel.setFont(new Font("Arial", Font.PLAIN, 20));
-        gbcItem.gridy = 4;
-        formPanel.add(typeLabel, gbcItem);
+        gbcForm.gridy = 4;
+        formPanel.add(typeLabel, gbcForm);
 
-        gbcItem.insets = new Insets(5, 5, 5, 5);
+        gbcForm.insets = new Insets(5, 5, 5, 5);
 
         // -- Type JComboBox --
         String[] options = {"Comida", "Bebida", "Sobremesa"};
         JComboBox<String> typeComboBox = new JComboBox<>(options);
         typeComboBox.setBackground(new Color(172,179,174));
-        gbcItem.gridy = 5;
-        formPanel.add(typeComboBox, gbcItem);
+        gbcForm.gridy = 5;
+        formPanel.add(typeComboBox, gbcForm);
 
-        gbcItem.insets = new Insets(20, 5, 5, 5);
+        gbcForm.insets = new Insets(20, 5, 5, 5);
 
         // -- Price Label --
         JLabel priceLabel = new JLabel("Preço (R$):");
         priceLabel.setFont(new Font("Arial", Font.PLAIN, 20));
-        gbcItem.gridy = 6;
-        formPanel.add(priceLabel, gbcItem);
+        gbcForm.gridy = 6;
+        formPanel.add(priceLabel, gbcForm);
 
-        gbcItem.insets = new Insets(5, 5, 5, 5);
+        gbcForm.insets = new Insets(5, 5, 5, 5);
 
         // -- Price TextField --
         priceTextField = new JTextField();
@@ -129,18 +129,18 @@ public class TelaRegistro extends JDialog
         priceTextField.setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED));
         priceTextField.setFont(new Font("Arial", Font.PLAIN, 18));
         priceTextField.setPreferredSize(new Dimension(0, 25));
-        gbcItem.gridy = 7;
-        formPanel.add(priceTextField, gbcItem);
+        gbcForm.gridy = 7;
+        formPanel.add(priceTextField, gbcForm);
 
-        gbcItem.insets = new Insets(20, 5, 5, 5);
+        gbcForm.insets = new Insets(20, 5, 5, 5);
 
         // -- Date Label --
         JLabel dateLabel = new JLabel("Data de Validade:");
         dateLabel.setFont(new Font("Arial", Font.PLAIN, 20));
-        gbcItem.gridy = 8;
-        formPanel.add(dateLabel, gbcItem);
+        gbcForm.gridy = 8;
+        formPanel.add(dateLabel, gbcForm);
 
-        gbcItem.insets = new Insets(5, 5, 5, 5);
+        gbcForm.insets = new Insets(5, 5, 5, 5);
 
         // -- Date Field --
         try {
@@ -153,8 +153,8 @@ public class TelaRegistro extends JDialog
             dateTextField.setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED));
             dateTextField.setPreferredSize(new Dimension(0, 25));
             dateTextField.setFocusLostBehavior(JFormattedTextField.PERSIST);
-            gbcItem.gridy = 9;
-            formPanel.add(dateTextField, gbcItem);
+            gbcForm.gridy = 9;
+            formPanel.add(dateTextField, gbcForm);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -246,11 +246,10 @@ public class TelaRegistro extends JDialog
             }
         });
 
-        // -- Cancel Button --
-        JButton cancelButton = createCustomButton("Cancelar");
-        cancelButton.setBackground(new Color(220, 53, 69));
-        
-        cancelButton.addActionListener(new ActionListener() 
+        // -- Back Button --
+        JButton backButton = createCustomButton("Voltar");
+        backButton.setBackground(new Color(220, 53, 69));
+        backButton.addActionListener(new ActionListener() 
         {
             public void actionPerformed(ActionEvent e)
             {
@@ -261,12 +260,12 @@ public class TelaRegistro extends JDialog
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
         buttonPanel.setBackground(new Color(197,202,196));
         buttonPanel.add(saveButton);
-        buttonPanel.add(cancelButton);
+        buttonPanel.add(backButton);
 
-        gbcItem.gridy = 10;
-        gbcItem.gridwidth = GridBagConstraints.REMAINDER;
-        gbcItem.insets = new Insets(30, 5, 5, 5); 
-        formPanel.add(buttonPanel, gbcItem);
+        gbcForm.gridy = 10;
+        gbcForm.gridwidth = GridBagConstraints.REMAINDER;
+        gbcForm.insets = new Insets(30, 5, 5, 5); 
+        formPanel.add(buttonPanel, gbcForm);
 
         add(mainPanel);
     }
@@ -276,6 +275,7 @@ public class TelaRegistro extends JDialog
         JButton button = new JButton(text);
 
         button.setForeground(Color.WHITE);
+        button.setBackground(new Color(0,86,179));
         button.setFont(new Font("Arial", Font.BOLD, 16));
         button.setFocusPainted(false);
         button.setPreferredSize(new Dimension(150, 40));
