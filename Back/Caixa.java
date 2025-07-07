@@ -28,7 +28,7 @@ public class Caixa
     private final TreeMap<Double, Integer> cashControl = new TreeMap<>(Collections.reverseOrder());
 
     /**
-     * Construtor da classe {@code Caixa}.
+     * Construtor da classe {@link Caixa}.
      * 
      * Inicializa o controle de caixa {@code cashControl} com todas as denominações de cédulas e moedas
      * utilizadas no sistema, atribuindo a cada uma a quantidade inicial igual a zero.

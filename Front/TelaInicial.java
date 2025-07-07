@@ -5,8 +5,35 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+/**
+ * Gera a Tela Inicial do Sistema, com botões de acesso à área do Usuário ({@code JButton userButton}),
+ * que leva para a Tela Principal do usuário, a Tela para Iniciar Compra ({@link TelaIniciarCompra}), e
+ * acesso à área de Administração do sistema ({@code JButton admButton}), que leva para a Tela Principal
+ * de Administração do Sistema, a Tela Admin ({@link TelaAdmin}).
+ * 
+ * O Acesso a Tela de Administração do Sistema somente ocorrerá se o usuário realizar o login de 
+ * administrador, que é entregue ao usuário, quando clica no botão {@code JButton admButton}, pela
+ * {@link TelaLogin}.
+ */
 public class TelaInicial extends JFrame
 {
+    /**
+     * Construtor da classe {@link TelaInicial}.
+     * 
+     * Responsável por desenhar ao usuário toda a estrutura da tela, seus botões, realizar o controle
+     * e direcionamento dos botões e verificação de sucesso no login de administrador para direcionar
+     * o sistema para a {@link TelaAdmin}.
+     * 
+     * @param stock Objeto da classe {@link Estoque}, responsável por registrar todo o controle de 
+     * estoque do sistema. Iniciado na tela de Start do sistema ({@link StartApp}) e enviado como
+     * parâmetro por todo o sistema.
+     * @param cashControl Objeto da classe {@link Caixa}, responsável por registrar todo o controle de 
+     * Caixa do sistema. Iniciado na tela de Start do sistema ({@link StartApp}) e enviado como
+     * parâmetro por todo o sistema.
+     * @param orders Objeto da classe {@link ControlePedidos}, responsável por registrar todos os pedidos
+     * realizados no sistema. Iniciado na tela de Start do sistema ({@link StartApp}) e enviado como
+     * parâmetro por todo o sistema.
+     */
     public TelaInicial(Estoque stock, Caixa cashControl, ControlePedidos orders)
     {
         setTitle("Tela Inicial");
@@ -85,6 +112,11 @@ public class TelaInicial extends JFrame
         add(mainPanel);  
     }
 
+    /**
+     * Método auxiliar para criação e configuração visual dos botões da Tela {@link TelaInicial}.
+     * @param text String que aparecerá no botão.
+     * @return retorna um {@link JButton} formatado visualmente.
+     */
     private JButton createCustomButton(String text)
     {
         JButton button = new JButton(text);
