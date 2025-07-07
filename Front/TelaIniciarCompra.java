@@ -1,5 +1,4 @@
 package Front;
-
 import Back.*;
 import javax.swing.*;
 import java.awt.*;
