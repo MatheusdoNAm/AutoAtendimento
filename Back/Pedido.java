@@ -18,6 +18,12 @@ public class Pedido
         this.orderDate = LocalDate.now();
     }
 
+    public static void setOrderGlobalNumber(int number)
+    {
+        if (number > 0)
+            orderGlobalNumber = number;
+    }
+
     public static int getOrderGlobalNumber()
     {
         return orderGlobalNumber;

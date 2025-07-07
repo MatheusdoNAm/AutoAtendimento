@@ -330,11 +330,8 @@ public class TelaRemoveCaixa extends JDialog
             public void actionPerformed(ActionEvent e)
             {
                 System.out.println("Voltando");
-                TelaAdmin telaAdmin = new TelaAdmin(stock, cashRegister, orders);
-                telaAdmin.setVisible(true);
                 dispose();
             }
-            
         });
 
         add(mainPanel);

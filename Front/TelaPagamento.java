@@ -155,6 +155,7 @@ public class TelaPagamento extends JDialog
             @Override
             public void actionPerformed(ActionEvent e)
             {
+                Pedido.setOrderGlobalNumber(Pedido.getOrderGlobalNumber() - 1);
                 TelaIniciarCompra telaIniciarCompra = new TelaIniciarCompra(stock, cashControl, orders);
                 telaIniciarCompra.setVisible(true);
                 owner.dispose();

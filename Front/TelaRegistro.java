@@ -172,80 +172,84 @@ public class TelaRegistro extends JDialog
                 if (codeTextField.getText().isEmpty() || nameTextField.getText().isEmpty() || priceTextField.getText().isEmpty())
                 {
                     JOptionPane.showMessageDialog(TelaRegistro.this, "Preencha os Campos Obrigatórios", "Erro Cadastro", JOptionPane.ERROR_MESSAGE);
+                    return;
                 }
-                else
+
+                int code;
+                double price;
+
+                try {
+                    code = Integer.parseInt(codeTextField.getText());
+                } catch (NumberFormatException nfe) {
+                    JOptionPane.showMessageDialog(TelaRegistro.this, "O código deve ser um número inteiro!", "Erro de Formato", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                try {
+                    price = Double.parseDouble(priceTextField.getText().replace(",", "."));
+                } catch (NumberFormatException nfe) {
+                    JOptionPane.showMessageDialog(TelaRegistro.this, "O preço deve ser um número válido (ex: 10.50)!", "Erro de Formato", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                String name = nameTextField.getText();
+                String type = (String) typeComboBox.getSelectedItem();
+                String validityText = dateTextField.getText().trim();
+                LocalDate date = null;
+
+                if (!dateTextField.getText().isEmpty() && !dateTextField.getText().equals("__/__/____"))
                 {
-                    int code = Integer.parseInt(codeTextField.getText());
-                    String name = nameTextField.getText();
-                    String type = (String) typeComboBox.getSelectedItem();
-                    double price = Double.parseDouble(priceTextField.getText());
-                    String validityText = dateTextField.getText().trim();
-                    LocalDate date = null;
-
-                    if (!dateTextField.getText().isEmpty() && !dateTextField.getText().equals("__/__/____"))
+                    try 
                     {
-                        try 
-                        {
-                            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-                            date = LocalDate.parse(validityText, formatter);
+                        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+                        date = LocalDate.parse(validityText, formatter);
 
-                            if (date.isBefore(LocalDate.now()))
-                            {
-                                JOptionPane.showMessageDialog(TelaRegistro.this, 
-                                        "A Data de Validade não pode ser no passado!",
-                                        "Data Inválida",
-                                        JOptionPane.WARNING_MESSAGE);
-                                        dateTextField.setText("");
-                                return;
-                            }
-                        }
-                        catch (DateTimeParseException dtpe)
+                        if (date.isBefore(LocalDate.now()))
                         {
                             JOptionPane.showMessageDialog(TelaRegistro.this, 
-                                        "Formato de Data Invalido. Use DD/MM/AAAA",
-                                        "Erro de Formato de Data",
-                                        JOptionPane.ERROR_MESSAGE);
+                                    "A Data de Validade não pode ser no passado!",
+                                    "Data Inválida",
+                                    JOptionPane.WARNING_MESSAGE);
+                                    dateTextField.setText("");
                             return;
                         }
                     }
-
-                    if(dateTextField.getText().isEmpty())
-                    {   
-                        if(!stock.registerProduct(new Produto(code, name, type, price)))
-                            JOptionPane.showMessageDialog(TelaRegistro.this, 
-                                        "Código ja registrado",
-                                        "Item repetido",
-                                        JOptionPane.ERROR_MESSAGE);
-                        else
-                        {
-                            JOptionPane.showMessageDialog(TelaRegistro.this, "Produto Cadastrado com sucesso!", "Produto Cadastrado", JOptionPane.INFORMATION_MESSAGE);
-                            codeTextField.setText("");
-                            nameTextField.setText("");
-                            priceTextField.setText("");
-                            dateTextField.setText("");
-                        }
-                    }
-                    else
+                    catch (DateTimeParseException dtpe)
                     {
-                        if(!stock.registerProduct(new Produto(code, name, type, price, date)))
-                            JOptionPane.showMessageDialog(TelaRegistro.this, 
-                                        "Código ja registrado",
-                                        "Item repetido",
-                                        JOptionPane.ERROR_MESSAGE);
-                        else
-                        {
-                            JOptionPane.showMessageDialog(TelaRegistro.this, "Produto Cadastrado com sucesso!", "Produto Cadastrado", JOptionPane.INFORMATION_MESSAGE);
-                            codeTextField.setText("");
-                            nameTextField.setText("");
-                            priceTextField.setText("");
-                            dateTextField.setText("");
-                        }
+                        JOptionPane.showMessageDialog(TelaRegistro.this, 
+                                    "Formato de Data Invalido. Use DD/MM/AAAA",
+                                    "Erro de Formato de Data",
+                                    JOptionPane.ERROR_MESSAGE);
+                        return;
                     }
-                    stock.listarProdutos();
                 }
+
+                boolean sucesso;
+
+                if(dateTextField.getText().isEmpty() || dateTextField.getText().equals("__/__/____"))
+                    sucesso = stock.registerProduct(new Produto(code, name, type, price));
+                else
+                    sucesso = stock.registerProduct(new Produto(code, name, type, price, date));
+
+                if (!sucesso)
+                {
+                    JOptionPane.showMessageDialog(TelaRegistro.this, 
+                            "Código já registrado",
+                            "Item repetido",
+                            JOptionPane.ERROR_MESSAGE);
+                }
+                else
+                {
+                    JOptionPane.showMessageDialog(TelaRegistro.this, "Produto cadastrado com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+                    codeTextField.setText("");
+                    nameTextField.setText("");
+                    priceTextField.setText("");
+                    dateTextField.setText("");
+                }
+
+                stock.listarProdutos();
             }
         });
-
         // -- Back Button --
         JButton backButton = createCustomButton("Voltar");
         backButton.setBackground(new Color(220, 53, 69));

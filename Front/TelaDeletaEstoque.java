@@ -100,28 +100,35 @@ public class TelaDeletaEstoque extends JDialog
                 }
                 else
                 {
-                    int code = Integer.parseInt(codeTextField.getText());
-                    if (!stock.isProductInStock(code))
+                    try 
                     {
-                        JOptionPane.showMessageDialog(TelaDeletaEstoque.this, "Produto não encontrado", "Produto Inexistente", JOptionPane.ERROR_MESSAGE);
-                    }
-                    else
-                    {
-                        int option = JOptionPane.showConfirmDialog
-                        (
-                            TelaDeletaEstoque.this,
-                            "Tem certeza que deseja deletar " + stock.getProductName(code) + " do Estoque?",
-                            "Confirmação Delete",
-                            JOptionPane.YES_NO_OPTION,
-                            JOptionPane.QUESTION_MESSAGE
-                        );
-
-                        if (option == JOptionPane.YES_OPTION)
+                        int code = Integer.parseInt(codeTextField.getText());
+                        if (!stock.isProductInStock(code))
                         {
-                            JOptionPane.showMessageDialog(TelaDeletaEstoque.this, stock.getProductName(code) + " deletado com sucesso", "Produto Deletado", JOptionPane.INFORMATION_MESSAGE);
-                            stock.deleteProduct(code);
+                            JOptionPane.showMessageDialog(TelaDeletaEstoque.this, "Produto não encontrado", "Produto Inexistente", JOptionPane.ERROR_MESSAGE);
                         }
-                        codeTextField.setText("");
+                        else
+                        {
+                            int option = JOptionPane.showConfirmDialog
+                            (
+                                TelaDeletaEstoque.this,
+                                "Tem certeza que deseja deletar " + stock.getProductName(code) + " do Estoque?",
+                                "Confirmação Delete",
+                                JOptionPane.YES_NO_OPTION,
+                                JOptionPane.QUESTION_MESSAGE
+                            );
+    
+                            if (option == JOptionPane.YES_OPTION)
+                            {
+                                JOptionPane.showMessageDialog(TelaDeletaEstoque.this, stock.getProductName(code) + " deletado com sucesso", "Produto Deletado", JOptionPane.INFORMATION_MESSAGE);
+                                stock.deleteProduct(code);
+                            }
+                            codeTextField.setText("");
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        JOptionPane.showMessageDialog(TelaDeletaEstoque.this, "Insira apenas valores inteiros", "Valor Invalido", JOptionPane.ERROR_MESSAGE);
                     }
                 }
             }

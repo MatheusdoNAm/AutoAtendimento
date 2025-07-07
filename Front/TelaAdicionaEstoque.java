@@ -120,22 +120,30 @@ public class TelaAdicionaEstoque extends JDialog
                     JOptionPane.showMessageDialog(TelaAdicionaEstoque.this, "Preencha todos os Campos", "Erro Adição", JOptionPane.ERROR_MESSAGE);
                 }
                 else
-                {
-                    int quantity = Integer.parseInt(quantityTextField.getText());
-                    int code = Integer.parseInt(codeTextField.getText());
-
-                    if (quantity <=0)
-                        JOptionPane.showMessageDialog(TelaAdicionaEstoque.this, "A quantidade deve ser maior que 0!", "Quantidade Invalida", JOptionPane.ERROR_MESSAGE);
-                    else
+                {   
+                    try
                     {
-                        if (!stock.addStock(code, quantity))
-                            JOptionPane.showMessageDialog(TelaAdicionaEstoque.this, "Produto não encontrado!", "Produto inexistente", JOptionPane.ERROR_MESSAGE);
+                        int quantity = Integer.parseInt(quantityTextField.getText());
+                        int code = Integer.parseInt(codeTextField.getText());
+    
+                        if (quantity <=0)
+                            JOptionPane.showMessageDialog(TelaAdicionaEstoque.this, "A quantidade deve ser maior que 0!", "Quantidade Invalida", JOptionPane.ERROR_MESSAGE);
                         else
                         {
-                            JOptionPane.showMessageDialog(TelaAdicionaEstoque.this, "Quantidade adicionada com Sucesso!", "Quantidade Adicionada", JOptionPane.INFORMATION_MESSAGE);
-                            codeTextField.setText("");
-                            quantityTextField.setText("");
+                            if (!stock.addStock(code, quantity))
+                                JOptionPane.showMessageDialog(TelaAdicionaEstoque.this, "Produto não encontrado!", "Produto inexistente", JOptionPane.ERROR_MESSAGE);
+                            else
+                            {
+                                JOptionPane.showMessageDialog(TelaAdicionaEstoque.this, "Quantidade adicionada com Sucesso!", "Quantidade Adicionada", JOptionPane.INFORMATION_MESSAGE);
+                                codeTextField.setText("");
+                                quantityTextField.setText("");
+                            }
                         }
+                        
+                    } 
+                    catch (Exception ex)
+                    {
+                        JOptionPane.showMessageDialog(TelaAdicionaEstoque.this, "Insira apenas valores inteiros", "Valor Invalido", JOptionPane.ERROR_MESSAGE);
                     }
                 }
             }
