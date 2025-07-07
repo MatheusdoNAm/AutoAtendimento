@@ -7,12 +7,8 @@ import java.awt.event.ActionListener;
 
 public class TelaInicial extends JFrame
 {
-    private Estoque stock;
-
-    public TelaInicial()
+    public TelaInicial(Estoque stock, Caixa cashControl, ControlePedidos orders)
     {
-        stock = new Estoque();
-
         setTitle("Tela Inicial");
         setSize(600,800);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -56,7 +52,9 @@ public class TelaInicial extends JFrame
             @Override
             public void actionPerformed (ActionEvent e)
             {
-                System.out.println("Acessando Tela de Usuário");
+                TelaIniciarCompra telaIniciarCompra = new TelaIniciarCompra(stock, cashControl, orders);
+                telaIniciarCompra.setVisible(true);
+                dispose();
             }
             
         });
@@ -78,7 +76,7 @@ public class TelaInicial extends JFrame
                 if (telaLogin.isLoginSucessful())
                 {
                     System.out.println("Acessando Tela de Administração");
-                    TelaAdmin telaAdmin = new TelaAdmin(stock);
+                    TelaAdmin telaAdmin = new TelaAdmin(stock, cashControl, orders);
                     telaAdmin.setVisible(true);
                     dispose();
                 }
@@ -99,12 +97,5 @@ public class TelaInicial extends JFrame
         button.setPreferredSize(new Dimension(250,140));
 
         return button;
-    }
-
-    public static void main (String[] args)
-    {
-        TelaInicial telaInicial = new TelaInicial();
-        telaInicial.setVisible(true);
-    }
-    
+    } 
 }

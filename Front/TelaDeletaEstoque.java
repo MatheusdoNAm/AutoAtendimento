@@ -118,7 +118,7 @@ public class TelaDeletaEstoque extends JDialog
 
                         if (option == JOptionPane.YES_OPTION)
                         {
-                            JOptionPane.showMessageDialog(TelaDeletaEstoque.this, stock.getProductName(code) + "deletado com sucesso", "Produto Deletado", JOptionPane.INFORMATION_MESSAGE);
+                            JOptionPane.showMessageDialog(TelaDeletaEstoque.this, stock.getProductName(code) + " deletado com sucesso", "Produto Deletado", JOptionPane.INFORMATION_MESSAGE);
                             stock.deleteProduct(code);
                         }
                         codeTextField.setText("");
@@ -164,6 +164,5 @@ public class TelaDeletaEstoque extends JDialog
         button.setFocusPainted(false);
 
         return button;
-    }
-    
+    }   
 }

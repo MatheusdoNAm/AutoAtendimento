@@ -7,7 +7,7 @@ import java.awt.event.ActionListener;
 
 public class TelaEditaEstoque extends JDialog
 {
-    public TelaEditaEstoque(JFrame owner, Estoque stock)
+    public TelaEditaEstoque(JFrame owner, Estoque stock, Caixa cashControl)
     {
         super(owner, "Edição Estoque", true);
         setSize(336,368);
@@ -57,7 +57,7 @@ public class TelaEditaEstoque extends JDialog
             @Override
             public void actionPerformed (ActionEvent e)
             {
-                TelaAdicionaEstoque telaAdicionaEstoque = new TelaAdicionaEstoque(owner, stock);
+                TelaAdicionaEstoque telaAdicionaEstoque = new TelaAdicionaEstoque(owner, stock, cashControl);
                 dispose();
                 telaAdicionaEstoque.setVisible(true);
             }

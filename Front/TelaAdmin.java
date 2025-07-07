@@ -7,7 +7,7 @@ import java.awt.event.ActionListener;
 
 public class TelaAdmin extends JFrame
 {
-    public TelaAdmin(Estoque stock)
+    public TelaAdmin(Estoque stock, Caixa cashControl, ControlePedidos orders)
     {
         setTitle("Tela de Administração");
         setSize(600,800);
@@ -73,7 +73,7 @@ public class TelaAdmin extends JFrame
             public void actionPerformed(ActionEvent e)
             {
                 System.out.println("Estoque");
-                TelaEstoque telaEstoque = new TelaEstoque(stock);
+                TelaEstoque telaEstoque = new TelaEstoque(stock, cashControl, orders);
                 telaEstoque.loadProducts(stock.getProductsStock());
                 telaEstoque.setVisible(true);
                 dispose();
@@ -110,6 +110,9 @@ public class TelaAdmin extends JFrame
             public void actionPerformed(ActionEvent e)
             {
                 System.out.println("Caixa");
+                TelaControleCaixa telaControleCaixa = new TelaControleCaixa(stock, cashControl, orders);
+                telaControleCaixa.setVisible(true);
+                dispose();
             }
             
         });
@@ -127,7 +130,7 @@ public class TelaAdmin extends JFrame
             public void actionPerformed (ActionEvent e)
             {
                 System.out.println("Retornando a tela inicial");
-                TelaInicial telaInicial = new TelaInicial();
+                TelaInicial telaInicial = new TelaInicial(stock, cashControl, orders);
                 telaInicial.setVisible(true);
                 dispose();
             } 

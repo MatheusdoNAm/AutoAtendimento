@@ -20,7 +20,7 @@ public class TelaEstoque extends JFrame
 
     private JPanel mainPanel;
 
-    public TelaEstoque(Estoque stock)
+    public TelaEstoque(Estoque stock, Caixa cashControl, ControlePedidos orders)
     {
         setTitle("Controle de Estoque");
         setSize(600, 800);
@@ -50,15 +50,15 @@ public class TelaEstoque extends JFrame
         addButton.addActionListener(e -> 
         {
             System.out.println("Alterando Estoque");
-            TelaEditaEstoque telaEditaEstoque = new TelaEditaEstoque(TelaEstoque.this, stock);
+            TelaEditaEstoque telaEditaEstoque = new TelaEditaEstoque(TelaEstoque.this, stock, cashControl);
             telaEditaEstoque.setVisible(true);
         });
 
-        JButton removeButton = createCustomButton("Voltar", new Color(220, 53, 69));
+        JButton backButton = createCustomButton("Voltar", new Color(220, 53, 69));
 
-        removeButton.addActionListener(e -> 
+        backButton.addActionListener(e -> 
         {
-            TelaAdmin telaAdmin = new TelaAdmin(stock);
+            TelaAdmin telaAdmin = new TelaAdmin(stock, cashControl, orders);
             telaAdmin.setVisible(true);
             dispose();
         });
@@ -66,7 +66,7 @@ public class TelaEstoque extends JFrame
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 15));
         buttonPanel.setBackground(new Color(197, 202, 196));
         buttonPanel.add(addButton);
-        buttonPanel.add(removeButton);
+        buttonPanel.add(backButton);
 
         add(buttonPanel, BorderLayout.SOUTH);
     }

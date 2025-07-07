@@ -11,7 +11,7 @@ public class TelaAdicionaEstoque extends JDialog
 {
     private JTextField codeTextField, quantityTextField;
 
-    public TelaAdicionaEstoque (JFrame owner, Estoque stock)
+    public TelaAdicionaEstoque (JFrame owner, Estoque stock, Caixa cashControl)
     {
         super(owner, "Adiciona Estoque de um Item", true);
         setSize(336,368);
