@@ -7,45 +7,44 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 /**
- * Tela de Visualização e Controle do Caixa.
+ * Tela de visualização e controle do caixa.
  *
- * A classe {@link TelaControleCaixa} exibe o estado atual do caixa do sistema,
- * detalhando a quantidade de cada cédula e moeda disponível.
- * Ela oferece opções para o administrador gerenciar o dinheiro no caixa.
+ * A classe {@link TelaControleCaixa} exibe o valor total em caixa, bem como a
+ * quantidade individual de cada cédula e moeda disponível. Permite o acesso
+ * às funcionalidades de adição e remoção de dinheiro do caixa.
  *
  * Funcionalidades principais:
  * <ul>
- * <li>Exibe o valor total em dinheiro no caixa.</li>
- * <li>Mostra a contagem individual de cédulas (R$100, R$50, R$20, R$10, R$5, R$2)
- * e moedas (R$1, R$0.50, R$0.25, R$0.10, R$0.05).</li>
- * <li>Permite o acesso à tela para **adicionar dinheiro** ({@link TelaAdicionaCaixa}) ao caixa.</li>
- * <li>Permite o acesso à tela para **remover dinheiro** ({@link TelaRemoveCaixa}) do caixa.</li>
- * <li>Oferece um botão para retornar à tela de administração ({@link TelaAdmin}).</li>
+ * <li>Exibição do saldo total do caixa.</li>
+ * <li>Exibição detalhada da quantidade de cada cédula (R$100, R$50, R$20, R$10, R$5, R$2)
+ * e moeda (R$1, R$0.50, R$0.25, R$0.10, R$0.05).</li>
+ * <li>Botões para abrir os diálogos de {@link TelaAdicionaCaixa} e {@link TelaRemoveCaixa}.</li>
+ * <li>Botão para retornar à {@link TelaAdmin}.</li>
+ * <li>Método para recarregar a tela, atualizando os valores exibidos.</li>
  * </ul>
- *
- * Utiliza instâncias das classes {@link Estoque}, {@link Caixa} e {@link ControlePedidos}
- * para interagir com os dados do sistema, focando no controle financeiro.
  */
 public class TelaControleCaixa extends JFrame
 {
+    private JPanel mainPanel;
+    private Caixa cashControl;
     private JTextField bill100TextField, bill50TextField, bill20TextField, bill10TextField,
                     bill5TextField, bill2TextField, coin1TextField, coin50TextField, coin25TextField,
                     coin10TextField, coin5TextField;
+    private JLabel subtitleLabel;
 
     /**
      * Construtor da classe {@link TelaControleCaixa}.
      *
-     * Responsável por construir a interface de controle de caixa, exibindo o total
-     * e as quantidades de cada denominação de dinheiro. Configura os botões para
-     * adicionar ou remover dinheiro e para retornar à tela anterior.
-     * Define o layout visual e as propriedades da janela.
+     * Inicializa a interface da tela de controle de caixa, exibindo os valores atuais
+     * e configurando os botões de interação.
      *
      * @param stock Instância de {@link Estoque} utilizada para gerenciar os produtos.
      * @param cashControl Instância de {@link Caixa} utilizada para controle financeiro.
      * @param orders Instância de {@link ControlePedidos} utilizada para manipular os pedidos feitos.
      */
-    public TelaControleCaixa(Estoque stock, Caixa cashRegister, ControlePedidos orders)
+    public TelaControleCaixa(Estoque stock, Caixa cashControl, ControlePedidos orders)
     {
+        this.cashControl = cashControl;
         setTitle("Visualizar Caixa");
         setSize(600,800);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -55,7 +54,7 @@ public class TelaControleCaixa extends JFrame
         getContentPane().setBackground(new Color(197,202,196));
         setLayout(new BorderLayout());
 
-        JPanel mainPanel = new JPanel (new GridBagLayout());
+        mainPanel = new JPanel (new GridBagLayout());
         mainPanel.setBackground(new Color(197,202,196));
 
         GridBagConstraints gbc = new GridBagConstraints();
@@ -72,7 +71,7 @@ public class TelaControleCaixa extends JFrame
         mainPanel.add(titleLabel, gbc);
 
         // -- Subtitle Label --
-        JLabel subtitleLabel = new JLabel("Caixa Atual: R$ " + String.format("%.2f", cashRegister.getTotalCash()));
+        subtitleLabel = new JLabel("Caixa Atual: R$ " + String.format("%.2f", cashControl.getTotalCash()));
         subtitleLabel.setFont(new Font("Arial", Font.BOLD, 15));
         gbc.gridy = 1;
         gbc.gridwidth = 1;
@@ -104,7 +103,7 @@ public class TelaControleCaixa extends JFrame
         insertsPanel.add(bill100Label, gbc);
 
         bill100TextField = createTextField();
-        bill100TextField.setText(String.valueOf(cashRegister.getQuantityBill(100)));
+        bill100TextField.setText(String.valueOf(cashControl.getQuantityBill(100)));
         bill100TextField.setFont(new Font("Arial", Font.BOLD, 14));
         gbc.gridx = 1;
         insertsPanel.add(bill100TextField, gbc);
@@ -120,7 +119,7 @@ public class TelaControleCaixa extends JFrame
         gbc.insets = new Insets(10, 0, 10, 0);
 
         bill50TextField = createTextField();
-        bill50TextField.setText(String.valueOf(cashRegister.getQuantityBill(50)));
+        bill50TextField.setText(String.valueOf(cashControl.getQuantityBill(50)));
         bill50TextField.setFont(new Font("Arial", Font.BOLD, 14));
         gbc.gridx = 3;
         insertsPanel.add(bill50TextField, gbc);
@@ -136,7 +135,7 @@ public class TelaControleCaixa extends JFrame
         gbc.insets = new Insets(10, 0, 10, 0);
 
         bill20TextField = createTextField();
-        bill20TextField.setText(String.valueOf(cashRegister.getQuantityBill(20)));
+        bill20TextField.setText(String.valueOf(cashControl.getQuantityBill(20)));
         bill20TextField.setFont(new Font("Arial", Font.BOLD, 14));
         gbc.gridx = 5;
         insertsPanel.add(bill20TextField, gbc);
@@ -153,7 +152,7 @@ public class TelaControleCaixa extends JFrame
         gbc.insets = new Insets(10, 0, 10, 0);
 
         bill10TextField = createTextField();
-        bill10TextField.setText(String.valueOf(cashRegister.getQuantityBill(10)));
+        bill10TextField.setText(String.valueOf(cashControl.getQuantityBill(10)));
         bill10TextField.setFont(new Font("Arial", Font.BOLD, 14));
         gbc.gridx = 1;
         insertsPanel.add(bill10TextField, gbc);
@@ -169,7 +168,7 @@ public class TelaControleCaixa extends JFrame
         gbc.insets = new Insets(10, 0, 10, 0);
 
         bill5TextField = createTextField();
-        bill5TextField.setText(String.valueOf(cashRegister.getQuantityBill(5)));
+        bill5TextField.setText(String.valueOf(cashControl.getQuantityBill(5)));
         bill5TextField.setFont(new Font("Arial", Font.BOLD, 14));
         gbc.gridx = 3;
         insertsPanel.add(bill5TextField, gbc);
@@ -185,7 +184,7 @@ public class TelaControleCaixa extends JFrame
         gbc.insets = new Insets(10, 0, 10, 0);
 
         bill2TextField = createTextField();
-        bill2TextField.setText(String.valueOf(cashRegister.getQuantityBill(2)));
+        bill2TextField.setText(String.valueOf(cashControl.getQuantityBill(2)));
         bill2TextField.setFont(new Font("Arial", Font.BOLD, 14));
         gbc.gridx = 5;
         insertsPanel.add(bill2TextField, gbc);
@@ -202,7 +201,7 @@ public class TelaControleCaixa extends JFrame
         gbc.insets = new Insets(10, 0, 10, 0);
 
         coin1TextField = createTextField();
-        coin1TextField.setText(String.valueOf(cashRegister.getQuantityBill(1)));
+        coin1TextField.setText(String.valueOf(cashControl.getQuantityBill(1)));
         coin1TextField.setFont(new Font("Arial", Font.BOLD, 14));
         gbc.gridx = 1;
         insertsPanel.add(coin1TextField, gbc);
@@ -218,7 +217,7 @@ public class TelaControleCaixa extends JFrame
         gbc.insets = new Insets(10, 0, 10, 0);
 
         coin50TextField = createTextField();
-        coin50TextField.setText(String.valueOf(cashRegister.getQuantityBill(0.5)));
+        coin50TextField.setText(String.valueOf(cashControl.getQuantityBill(0.5)));
         coin50TextField.setFont(new Font("Arial", Font.BOLD, 14));
         gbc.gridx = 3;
         insertsPanel.add(coin50TextField, gbc);
@@ -234,7 +233,7 @@ public class TelaControleCaixa extends JFrame
         gbc.insets = new Insets(10, 0, 10, 0);
 
         coin25TextField = createTextField();
-        coin25TextField.setText(String.valueOf(cashRegister.getQuantityBill(0.25)));
+        coin25TextField.setText(String.valueOf(cashControl.getQuantityBill(0.25)));
         coin25TextField.setFont(new Font("Arial", Font.BOLD, 14));
         gbc.gridx = 5;
         insertsPanel.add(coin25TextField, gbc);
@@ -251,7 +250,7 @@ public class TelaControleCaixa extends JFrame
         gbc.insets = new Insets(10, 0, 10, 0);
 
         coin10TextField = createTextField();
-        coin10TextField.setText(String.valueOf(cashRegister.getQuantityBill(0.1)));
+        coin10TextField.setText(String.valueOf(cashControl.getQuantityBill(0.1)));
         coin10TextField.setFont(new Font("Arial", Font.BOLD, 14));
         gbc.gridx = 1;
         insertsPanel.add(coin10TextField, gbc);
@@ -267,7 +266,7 @@ public class TelaControleCaixa extends JFrame
         gbc.insets = new Insets(10, 0, 10, 0);
 
         coin5TextField = createTextField();
-        coin5TextField.setText(String.valueOf(cashRegister.getQuantityBill(0.05)));
+        coin5TextField.setText(String.valueOf(cashControl.getQuantityBill(0.05)));
         coin5TextField.setFont(new Font("Arial", Font.BOLD, 14));
         gbc.gridx = 3;
         insertsPanel.add(coin5TextField, gbc);
@@ -292,7 +291,7 @@ public class TelaControleCaixa extends JFrame
             @Override
             public void actionPerformed (ActionEvent e)
             {
-                TelaAdicionaCaixa telaAdicionaCaixa = new TelaAdicionaCaixa(TelaControleCaixa.this, stock, cashRegister, orders);
+                TelaAdicionaCaixa telaAdicionaCaixa = new TelaAdicionaCaixa(TelaControleCaixa.this, TelaControleCaixa.this, stock, cashControl, orders);
                 telaAdicionaCaixa.setVisible(true);
             }
             
@@ -309,7 +308,7 @@ public class TelaControleCaixa extends JFrame
             @Override
             public void actionPerformed (ActionEvent e)
             {
-                TelaRemoveCaixa telaRemoveCaixa = new TelaRemoveCaixa(TelaControleCaixa.this, stock, cashRegister, orders);
+                TelaRemoveCaixa telaRemoveCaixa = new TelaRemoveCaixa(TelaControleCaixa.this, TelaControleCaixa.this, stock, cashControl, orders);
                 telaRemoveCaixa.setVisible(true);
             }
             
@@ -331,7 +330,7 @@ public class TelaControleCaixa extends JFrame
             public void actionPerformed(ActionEvent e)
             {
                 System.out.println("Voltando");
-                TelaAdmin telaAdmin = new TelaAdmin(stock, cashRegister, orders);
+                TelaAdmin telaAdmin = new TelaAdmin(stock, cashControl, orders);
                 telaAdmin.setVisible(true);
                 dispose();
             }
@@ -343,12 +342,37 @@ public class TelaControleCaixa extends JFrame
     }
 
     /**
-     * Método auxiliar para criar um {@link JTextField} padronizado para exibir quantidades de dinheiro.
+     * Recarrega a tela de controle de caixa, atualizando os campos de texto
+     * com as quantidades atuais de cédulas e moedas, e o saldo total do caixa.
+     */
+    public void reloadScreen()
+    {
+        System.out.println("Reload");
+
+        bill100TextField.setText(String.valueOf(cashControl.getQuantityBill(100)));
+        bill50TextField.setText(String.valueOf(cashControl.getQuantityBill(50)));
+        bill20TextField.setText(String.valueOf(cashControl.getQuantityBill(20)));
+        bill10TextField.setText(String.valueOf(cashControl.getQuantityBill(10)));
+        bill5TextField.setText(String.valueOf(cashControl.getQuantityBill(5)));
+        bill2TextField.setText(String.valueOf(cashControl.getQuantityBill(2)));
+
+        coin1TextField.setText(String.valueOf(cashControl.getQuantityBill(1)));
+        coin50TextField.setText(String.valueOf(cashControl.getQuantityBill(0.5)));
+        coin25TextField.setText(String.valueOf(cashControl.getQuantityBill(0.25)));
+        coin10TextField.setText(String.valueOf(cashControl.getQuantityBill(0.1)));
+        coin5TextField.setText(String.valueOf(cashControl.getQuantityBill(0.05)));
+        subtitleLabel.setText("Caixa Atual: R$ " + String.format("%.2f", cashControl.getTotalCash()));
+
+
+        mainPanel.revalidate();
+        mainPanel.repaint();
+    }
+
+    /**
+     * Cria um campo de texto ({@link JTextField}) predefinido para exibir as quantidades de cédulas/moedas.
+     * O campo é configurado para não ser editável e possui um estilo visual específico.
      *
-     * O campo de texto é configurado como **não editável**, possui uma cor de fundo específica,
-     * uma borda de chanfro rebaixada e um tamanho preferencial fixo.
-     *
-     * @return Um {@link JTextField} configurado para exibição de valores.
+     * @return Um {@link JTextField} estilizado e não editável.
      */
     public JTextField createTextField()
     {

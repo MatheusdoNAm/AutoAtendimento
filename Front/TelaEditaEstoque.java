@@ -6,40 +6,33 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 /**
- * Tela de Opções de Edição do Estoque.
+ * Diálogo para selecionar o tipo de alteração no estoque (adicionar, remover ou deletar).
  *
- * A classe {@link TelaEditaEstoque} funciona como um hub para as diferentes operações
- * de modificação do estoque do sistema. Ela apresenta botões que direcionam
- * o usuário para telas específicas de gerenciamento.
+ * A classe {@link TelaEditaEstoque} funciona como um menu intermediário,
+ * direcionando o usuário para as telas específicas de modificação do estoque
+ * ({@link TelaAdicionaEstoque}, {@link TelaRemoveEstoque}, {@link TelaDeletaEstoque}).
  *
- * Funcionalidades oferecidas:
+ * As opções disponíveis são:
  * <ul>
- * <li>Acesso à tela para **adicionar quantidade** a um produto existente ({@link TelaAdicionaEstoque}).</li>
- * <li>Acesso à tela para **remover quantidade** de um produto existente ({@link TelaRemoveEstoque}).</li>
- * <li>Acesso à tela para **deletar um produto** completamente do estoque ({@link TelaDeletaEstoque}).</li>
- * <li>Opção para retornar à tela de visualização do estoque ({@link TelaEstoque}).</li>
+ * <li>Adicionar Estoque: Abre a tela {@link TelaAdicionaEstoque}.</li>
+ * <li>Remover Estoque: Abre a tela {@link TelaRemoveEstoque}.</li>
+ * <li>Deletar Produto: Abre a tela {@link TelaDeletaEstoque}.</li>
  * </ul>
- *
- * Esta tela é um {@link JDialog} modal, o que significa que bloqueia a interação
- * com a tela pai enquanto estiver aberta.
- *
- * Utiliza instâncias das classes {@link Estoque} e {@link Caixa} para garantir
- * a continuidade dos dados entre as telas de edição.
  */
 public class TelaEditaEstoque extends JDialog
 {
     /**
      * Construtor da classe {@link TelaEditaEstoque}.
      *
-     * Inicializa a interface de edição de estoque, configurando os botões
-     * para as operações de adicionar, remover e deletar produtos, bem como
-     * o botão para voltar. Define o layout visual e as propriedades da janela de diálogo.
+     * Configura a janela de diálogo, seus botões de opção e os listeners de eventos
+     * para cada tipo de alteração de estoque.
      *
-     * @param owner O {@link JFrame} pai desta janela de diálogo, tipicamente a {@link TelaEstoque}.
+     * @param telaEstoque A instância de {@link TelaEstoque} pai, utilizada para manter a referência.
+     * @param owner O {@link JFrame} pai desta janela de diálogo.
      * @param stock Instância de {@link Estoque} utilizada para gerenciar os produtos.
-     * @param cashControl Instância de {@link Caixa} utilizada para controle financeiro.0
+     * @param cashControl Instância de {@link Caixa} utilizada para controle financeiro.
      */
-    public TelaEditaEstoque(JFrame owner, Estoque stock, Caixa cashControl)
+    public TelaEditaEstoque(TelaEstoque telaEstoque, JFrame owner, Estoque stock, Caixa cashControl)
     {
         super(owner, "Edição Estoque", true);
         setSize(336,368);
@@ -89,7 +82,7 @@ public class TelaEditaEstoque extends JDialog
             @Override
             public void actionPerformed (ActionEvent e)
             {
-                TelaAdicionaEstoque telaAdicionaEstoque = new TelaAdicionaEstoque(owner, stock, cashControl);
+                TelaAdicionaEstoque telaAdicionaEstoque = new TelaAdicionaEstoque(telaEstoque, owner, stock, cashControl);
                 dispose();
                 telaAdicionaEstoque.setVisible(true);
             }
@@ -107,7 +100,7 @@ public class TelaEditaEstoque extends JDialog
             @Override
             public void actionPerformed (ActionEvent e)
             {
-                TelaRemoveEstoque telaRemoveEstoque = new TelaRemoveEstoque(owner, stock);
+                TelaRemoveEstoque telaRemoveEstoque = new TelaRemoveEstoque(telaEstoque, owner, stock);
                 dispose();
                 telaRemoveEstoque.setVisible(true);
             }
@@ -128,7 +121,7 @@ public class TelaEditaEstoque extends JDialog
             @Override
             public void actionPerformed (ActionEvent e)
             {
-                TelaDeletaEstoque telaDeletaEstoque = new TelaDeletaEstoque(owner, stock);
+                TelaDeletaEstoque telaDeletaEstoque = new TelaDeletaEstoque(telaEstoque, owner, stock);
                 dispose();
                 telaDeletaEstoque.setVisible(true);
             }

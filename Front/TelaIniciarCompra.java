@@ -85,9 +85,9 @@ public class TelaIniciarCompra extends JFrame
 
         gbc.gridy = 1;
         
-        // -- Botão Sair no canto inferior direito --
-        JPanel sairPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        sairPanel.setBackground(new Color(197, 202, 196)); // Mesma cor do fundo
+        // -- Back Button --
+        JPanel backPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        backPanel.setBackground(new Color(197, 202, 196)); 
 
         JButton backButton = new JButton("Sair");
         backButton.setBackground(new Color(220, 53, 69));
@@ -96,7 +96,7 @@ public class TelaIniciarCompra extends JFrame
         backButton.setFocusPainted(false);
         backButton.setPreferredSize(new Dimension(100, 40));
         backButton.setBorderPainted(false);
-        sairPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 30));
+        backPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 30));
 
         backButton.addActionListener(e -> {
             System.out.println("Acessando Tela de Login");
@@ -112,8 +112,8 @@ public class TelaIniciarCompra extends JFrame
                 }
             });
 
-        sairPanel.add(backButton);
-        add(sairPanel, BorderLayout.SOUTH);
+        backPanel.add(backButton);
+        add(backPanel, BorderLayout.SOUTH);
 
         mainPanel.add(userButton, gbc);
         add(mainPanel);

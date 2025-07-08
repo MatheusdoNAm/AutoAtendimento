@@ -155,7 +155,7 @@ public class TelaPagamento extends JDialog
         gbcButtons.fill = GridBagConstraints.HORIZONTAL;
         gbcButtons.weighty = 0;
 
-        // Painel Voltar (esquerda)
+        // -- Back Button --
         JPanel leftPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         leftPanel.setOpaque(false);
         JButton backButton = createCustomButton("Voltar");
@@ -177,7 +177,7 @@ public class TelaPagamento extends JDialog
             
         });
 
-        // Painel Cancelar (centro)
+        // -- Cancel Button --
         JPanel centerPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         centerPanel.setOpaque(false);
         JButton cancelButton = createCustomButton("Cancelar");
@@ -201,7 +201,7 @@ public class TelaPagamento extends JDialog
             
         });
 
-        // Painel Confirmar (direita)
+        // -- Confirm Button
         JPanel rightPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         rightPanel.setOpaque(false);
         JButton confirmButton = createCustomButton("Confirmar Pagamento");
@@ -249,7 +249,6 @@ public class TelaPagamento extends JDialog
             
         });
 
-        // Adiciona o buttonsPanel ao mainPanel
         gbc.gridx = 0;
         gbc.gridy = 5;
         gbc.gridwidth = GridBagConstraints.REMAINDER;

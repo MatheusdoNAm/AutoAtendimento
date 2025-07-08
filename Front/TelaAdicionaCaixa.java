@@ -7,37 +7,39 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 /**
- * Tela para adicionar dinheiro ao caixa do sistema.
+ * Diálogo para adicionar cédulas e moedas ao controle de caixa.
  *
- * A classe {@link TelaAdicionaCaixa} permite que o administrador adicione cédulas e moedas
- * de diferentes valores ao caixa do sistema. A interface exibe o valor atual do caixa
- * e campos de entrada para cada denominação de dinheiro, permitindo que o usuário
- * especifique a quantidade a ser adicionada.
+ * A classe {@link TelaAdicionaCaixa} permite ao administrador inserir quantidades específicas
+ * de notas e moedas no caixa, atualizando o total e as contagens individuais.
  *
- * Em caso de entrada inválida (não numérica), uma mensagem de erro é exibida.
- *
- * Utiliza instâncias das classes {@link Estoque}, {@link Caixa} e {@link ControlePedidos}
- * para interagir com os dados do sistema, especialmente o controle de caixa.
+ * As operações incluem:
+ * <ul>
+ * <li>Adição de cédulas e moedas com base na entrada do usuário.</li>
+ * <li>Atualização do total do caixa e das quantidades de cada denominação.</li>
+ * <li>Atualização da tela de controle de caixa principal ({@link TelaControleCaixa}).</li>
+ * <li>Tratamento de erros para entradas não numéricas.</li>
+ * </ul>
  */
 public class TelaAdicionaCaixa extends JDialog
 {
     private JTextField bill100TextField, bill50TextField, bill20TextField, bill10TextField,
                     bill5TextField, bill2TextField, coin1TextField, coin50TextField, coin25TextField,
                     coin10TextField, coin5TextField;
+    private JLabel subtitleLabel;
 
     /**
      * Construtor da classe {@link TelaAdicionaCaixa}.
      *
-     * Responsável por construir a interface de adição de dinheiro ao caixa,
-     * configurando os campos de entrada para cédulas e moedas e os botões de ação.
-     * Define o layout visual e as propriedades da janela de diálogo.
+     * Configura a janela de diálogo, seus componentes visuais para entrada de valores
+     * de cédulas e moedas, e os listeners de eventos para os botões de "Adicionar" e "Voltar".
      *
+     * @param telaControleCaixa A instância de {@link TelaControleCaixa} para recarregar a tela após as adições.
      * @param owner O {@link JFrame} pai desta janela de diálogo.
      * @param stock Instância de {@link Estoque} utilizada para gerenciar os produtos.
      * @param cashControl Instância de {@link Caixa} utilizada para controle financeiro.
      * @param orders Instância de {@link ControlePedidos} utilizada para manipular os pedidos feitos.
      */
-    public TelaAdicionaCaixa(JFrame owner, Estoque stock, Caixa cashControl, ControlePedidos orders)
+    public TelaAdicionaCaixa(TelaControleCaixa telaControleCaixa, JFrame owner, Estoque stock, Caixa cashControl, ControlePedidos orders)
     {
         super(owner, "Adicionar no Caixa", true);
         setSize(480,450);
@@ -65,7 +67,7 @@ public class TelaAdicionaCaixa extends JDialog
         mainPanel.add(titleLabel, gbc);
 
         // -- Subtitle Label --
-        JLabel subtitleLabel = new JLabel("Caixa Atual: R$ " + String.format("%.2f", cashControl.getTotalCash()));
+        subtitleLabel = new JLabel("Caixa Atual: R$ " + String.format("%.2f", cashControl.getTotalCash()));
         subtitleLabel.setFont(new Font("Arial", Font.BOLD, 15));
         gbc.gridy = 1;
         gbc.gridwidth = 1;
@@ -287,6 +289,19 @@ public class TelaAdicionaCaixa extends JDialog
                     cashControl.addCash(0.10, Integer.parseInt(coin10TextField.getText()));
                     cashControl.addCash(0.05, Integer.parseInt(coin5TextField.getText()));
 
+                    telaControleCaixa.reloadScreen();
+                    bill100TextField.setText("0");
+                    bill50TextField.setText("0");
+                    bill20TextField.setText("0");
+                    bill10TextField.setText("0");
+                    bill5TextField.setText("0");
+                    bill2TextField.setText("0");
+                    coin1TextField.setText("0");
+                    coin50TextField.setText("0");
+                    coin25TextField.setText("0");
+                    coin10TextField.setText("0");
+                    coin5TextField.setText("0");
+                    subtitleLabel.setText("Caixa Atual: R$ " + String.format("%.2f", cashControl.getTotalCash()));
                     JOptionPane.showMessageDialog(TelaAdicionaCaixa.this,
                             "Cédulas adicionadas ao caixa!",
                             "Adicionado com Sucesso",
@@ -326,12 +341,10 @@ public class TelaAdicionaCaixa extends JDialog
     }
 
     /**
-     * Método auxiliar para criar um {@link JTextField} padronizado para entrada de quantidades de dinheiro.
+     * Cria um campo de texto ({@link JTextField}) predefinido para entrada de quantidades de cédulas/moedas.
+     * O campo é inicializado com o valor "0" e possui um estilo visual específico.
      *
-     * O campo de texto é inicializado com "0", possui uma cor de fundo específica,
-     * uma borda de chanfro rebaixada e um tamanho preferencial fixo.
-     *
-     * @return Um {@link JTextField} configurado para entrada de valores monetários.
+     * @return Um {@link JTextField} estilizado.
      */
     public JTextField createTextField()
     {

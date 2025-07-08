@@ -14,21 +14,20 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 /**
- * Tela de Controle de Estoque.
+ * Tela para visualizar e gerenciar o estoque de produtos.
  *
- * A classe {@link TelaEstoque} exibe os produtos disponíveis no estoque,
- * agrupados por categoria. Permite a visualização do código, nome, preço,
- * quantidade em estoque e validade de cada produto.
+ * A classe {@link TelaEstoque} exibe os produtos do estoque agrupados por categoria
+ * em tabelas organizadas. Permite ao administrador acessar as funcionalidades
+ * de alteração do estoque, como adicionar, remover ou deletar produtos.
  *
- * Oferece funcionalidades para:
+ * Funcionalidades principais:
  * <ul>
- * <li>Visualizar o estoque atual do sistema;</li>
- * <li>Acessar a tela de edição de estoque ({@link TelaEditaEstoque});</li>
- * <li>Retornar à tela de administração ({@link TelaAdmin}).</li>
+ * <li>Exibição dos produtos do estoque, incluindo código, nome, preço, quantidade e validity.</li>
+ * <li>Organização dos produtos em tabelas por categoria.</li>
+ * <li>Botão para acessar a tela de edição de estoque ({@link TelaEditaEstoque}).</li>
+ * <li>Botão para retornar à tela de administração ({@link TelaAdmin}).</li>
+ * <li>Método para recarregar a list de produtos, atualizando a exibição.</li>
  * </ul>
- *
- * Utiliza instâncias das classes {@link Estoque}, {@link Caixa} e {@link ControlePedidos}
- * para manter a continuidade dos dados e funcionalidades do sistema.
  */
 public class TelaEstoque extends JFrame
 {
@@ -38,9 +37,8 @@ public class TelaEstoque extends JFrame
     /**
      * Construtor da classe {@link TelaEstoque}.
      *
-     * Responsável por construir a interface de controle de estoque, configurando a tabela
-     * de produtos e os botões de ação para alterar o estoque e voltar à tela anterior.
-     * Define o layout visual e as propriedades da janela.
+     * Inicializa a interface da tela de controle de estoque, configurando o layout
+     * e os componentes visuais, incluindo as tabelas de produtos e os botões de ação.
      *
      * @param stock Instância de {@link Estoque} utilizada para gerenciar os produtos.
      * @param cashControl Instância de {@link Caixa} utilizada para controle financeiro.
@@ -76,7 +74,7 @@ public class TelaEstoque extends JFrame
         addButton.addActionListener(e -> 
         {
             System.out.println("Alterando Estoque");
-            TelaEditaEstoque telaEditaEstoque = new TelaEditaEstoque(TelaEstoque.this, stock, cashControl);
+            TelaEditaEstoque telaEditaEstoque = new TelaEditaEstoque(this, TelaEstoque.this, stock, cashControl);
             telaEditaEstoque.setVisible(true);
         });
 
@@ -98,16 +96,14 @@ public class TelaEstoque extends JFrame
     }
 
     /**
-     * Carrega e exibe os produtos no estoque na interface.
+     * Carrega e exibe os produtos do estoque na tela.
      *
-     * Este método limpa o conteúdo atual do painel principal, adiciona o título
-     * novamente e, em seguida, agrupa os produtos por categoria. Para cada categoria,
-     * é criada e adicionada uma tabela com os detalhes dos produtos.
+     * Este método remove todos os componentes de produto existentes e recria as tabelas
+     * com os data atuais do estoque, agrupando os produtos por categoria.
      *
-     * @param productsStock Um {@link Map} contendo os produtos em estoque, onde a chave é
-     * o código do produto e o valor é uma instância de {@link ProdutoEmEstoque}.
+     * @param stock A instância de {@link Estoque} da qual os produtos serão carregados.
      */
-    public void loadProducts(Map<Integer, ProdutoEmEstoque> productsStock)
+    public void loadProducts(Estoque stock)
     {
         mainPanel.removeAll();
 
@@ -117,36 +113,36 @@ public class TelaEstoque extends JFrame
         titleLabel.setBorder(BorderFactory.createEmptyBorder(20, 0, 20, 0));
         mainPanel.add(titleLabel);
 
-        // Agrupar produtos por categoria
-        Map<String, List<ProdutoEmEstoque>> categorias = new HashMap<>();
-        for (ProdutoEmEstoque pe : productsStock.values())
+        // -- Products by Category --
+        Map<String, List<ProdutoEmEstoque>> category = new HashMap<>();
+        for (ProdutoEmEstoque pe : stock.getProductsStock().values())
         {
-            String tipo = pe.getProduct().getType();
-            categorias.computeIfAbsent(tipo, k -> new ArrayList<>()).add(pe);
+            String type = pe.getProduct().getType();
+            category.computeIfAbsent(type, k -> new ArrayList<>()).add(pe);
         }
 
-        // Adicionar seções por categoria
-        for (Map.Entry<String, List<ProdutoEmEstoque>> entry : categorias.entrySet())
+        // Sections by Category
+        for (Map.Entry<String, List<ProdutoEmEstoque>> entry : category.entrySet())
         {
-            String tipo = entry.getKey();
-            List<ProdutoEmEstoque> lista = entry.getValue();
+            String type = entry.getKey();
+            List<ProdutoEmEstoque> list = entry.getValue();
 
-            Object[][] dados = new Object[lista.size()][5];
+            Object[][] data = new Object[list.size()][5];
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
-            for (int i = 0; i < lista.size(); i++)
+            for (int i = 0; i < list.size(); i++)
             {
-                Produto p = lista.get(i).getProduct();
-                dados[i][0] = p.getCode();
-                dados[i][1] = p.getName();
-                dados[i][2] = String.format("R$ %.2f", p.getPrice());
-                dados[i][3] = lista.get(i).getAmountStock();
+                Produto p = list.get(i).getProduct();
+                data[i][0] = p.getCode();
+                data[i][1] = p.getName();
+                data[i][2] = String.format("R$ %.2f", p.getPrice());
+                data[i][3] = list.get(i).getAmountStock();
 
-                LocalDate validade = p.getValidity();
-                dados[i][4] = (validade != null) ? validade.format(formatter) : "—";            
+                LocalDate validity = p.getValidity();
+                data[i][4] = (validity != null) ? validity.format(formatter) : "—";            
             }
 
-            mainPanel.add(createCategory(tipo, dados));
+            mainPanel.add(createCategory(type, data));
         }
 
         mainPanel.revalidate();
@@ -158,64 +154,60 @@ public class TelaEstoque extends JFrame
      * com os dados dos produtos pertencentes a essa categoria.
      *
      * O painel inclui um título estilizado para a categoria e uma {@link JTable}
-     * não editável que exibe o código, produto, preço, quantidade e validade dos itens.
+     * não editável que exibe o código, produto, preço, quantidade e validity dos itens.
      * As células da tabela são centralizadas.
      *
-     * @param titulo O título da categoria a ser exibido.
-     * @param dados Um array bidimensional de {@link Object} contendo os dados dos produtos,
+     * @param title O título da categoria a ser exibido.
+     * @param data Um array bidimensional de {@link Object} contendo os dados dos produtos,
      * onde cada linha representa um produto e cada coluna, uma de suas propriedades.
      * @return Um {@link JPanel} estilizado contendo o título da categoria e a tabela de produtos.
      */
-    private JPanel createCategory(String titulo, Object[][] dados)
+    private JPanel createCategory(String title, Object[][] data)
     {
         JPanel panel = new JPanel();
         panel.setLayout(new BorderLayout());
         panel.setBackground(new Color(197, 202, 196));
         panel.setBorder(BorderFactory.createEmptyBorder(10, 15, 20, 15));
 
-        // Título da categoria
-        JLabel label = new JLabel(titulo);
-        label.setOpaque(true);
-        label.setBackground(new Color(160, 167, 161));
-        label.setForeground(Color.WHITE);
-        label.setFont(new Font("Arial", Font.BOLD, 18));
-        label.setBorder(BorderFactory.createEmptyBorder(8, 10, 8, 10));
-        label.setHorizontalAlignment(SwingConstants.CENTER); // ← centralizado
-        panel.add(label, BorderLayout.NORTH);
+        // Category Title
+        JLabel categoryTitleLabel = new JLabel(title);
+        categoryTitleLabel.setOpaque(true);
+        categoryTitleLabel.setBackground(new Color(160, 167, 161));
+        categoryTitleLabel.setForeground(Color.WHITE);
+        categoryTitleLabel.setFont(new Font("Arial", Font.BOLD, 18));
+        categoryTitleLabel.setBorder(BorderFactory.createEmptyBorder(8, 10, 8, 10));
+        categoryTitleLabel.setHorizontalAlignment(SwingConstants.CENTER); // ← centralizado
+        panel.add(categoryTitleLabel, BorderLayout.NORTH);
 
-        // Colunas da tabela
-        String[] colunas = {"Código", "Produto", "Preço", "Qtd", "Validade"};
+        // Columns
+        String[] columns = {"Código", "Produto", "Preço", "Qtd", "validity"};
 
-        DefaultTableModel model = new DefaultTableModel(dados, colunas)
+        DefaultTableModel model = new DefaultTableModel(data, columns)
         {
             @Override
             public boolean isCellEditable(int row, int column)
             {
-                return false; // impede edição
+                return false;
             }
         };
 
-        JTable tabela = new JTable(model);
-        tabela.setRowHeight(25);
-        tabela.setFont(new Font("Arial", Font.PLAIN, 14));
-        tabela.getTableHeader().setFont(new Font("Arial", Font.BOLD, 14));
-        tabela.setBackground(Color.WHITE);
-        tabela.setFillsViewportHeight(true);
+        JTable table = new JTable(model);
+        table.setRowHeight(25);
+        table.setFont(new Font("Arial", Font.PLAIN, 14));
+        table.getTableHeader().setFont(new Font("Arial", Font.BOLD, 14));
+        table.setBackground(Color.WHITE);
+        table.setFillsViewportHeight(true);
+        table.getTableHeader().setResizingAllowed(false);   
+        table.getTableHeader().setReorderingAllowed(false);   
 
-        // Travar ações do cabeçalho
-        tabela.getTableHeader().setResizingAllowed(false);     // trava redimensionamento
-        tabela.getTableHeader().setReorderingAllowed(false);   // trava movimentação
-
-        // Centralizar todas as células da tabela
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         centerRenderer.setHorizontalAlignment(SwingConstants.CENTER);
-        for (int i = 0; i < tabela.getColumnCount(); i++)
+        for (int i = 0; i < table.getColumnCount(); i++)
         {
-            tabela.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
+            table.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
         }
 
-        // Scroll da tabela
-        JScrollPane tabelaScroll = new JScrollPane(tabela);
+        JScrollPane tabelaScroll = new JScrollPane(table);
         tabelaScroll.setPreferredSize(new Dimension(550, 100));
 
         panel.add(tabelaScroll, BorderLayout.CENTER);
@@ -224,13 +216,12 @@ public class TelaEstoque extends JFrame
     }
     
     /**
-     * Método auxiliar para criação de botões estilizados usados na {@link TelaLogin}.
+     * Método auxiliar para criação de botões estilizados usados na {@link TelaEstoque}.
      * 
      * Configura cor de fundo, cor da fonte, fonte, borda e tamanho do botão.
      *
      * @param text Texto a ser exibido no botão.
-     * @param bg A cor de fundo do botão.
-     * @return Um {@link JButton} estilizado e formatado para o layout da tela.
+     * @return {@link JButton} estilizado e formatado para o layout da tela.
      */
     private JButton createCustomButton(String text, Color bg)
     {

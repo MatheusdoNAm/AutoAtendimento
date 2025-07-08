@@ -7,18 +7,20 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 /**
- * Tela para adicionar quantidade a um item existente no estoque.
+ * Diálogo para adicionar estoque a um item existente.
  *
- * A classe {@link TelaAdicionaEstoque} permite ao usuário (administrador)
- * especificar o código de um produto e a quantidade a ser adicionada ao seu estoque.
- * A interface valida se os campos foram preenchidos corretamente e se a quantidade
- * é um valor positivo. Caso o produto não seja encontrado, uma mensagem de erro é exibida.
+ * A classe {@link TelaAdicionaEstoque} oferece uma interface para que o usuário
+ * insira o código de um produto e a quantidade a ser adicionada ao estoque.
+ * Realiza validações de entrada para garantir a integridade dos dados.
  *
- * Esta tela é um {@link JDialog} modal, o que significa que bloqueia a interação
- * com a tela pai enquanto estiver aberta.
- *
- * Utiliza instâncias das classes {@link Estoque} e {@link Caixa} para interagir
- * com os dados do sistema.
+ * As operações incluem:
+ * <ul>
+ * <li>Validação de campos vazios.</li>
+ * <li>Validação de quantidade maior que zero.</li>
+ * <li>Verificação da existência do produto no estoque.</li>
+ * <li>Atualização da tabela de produtos na {@link TelaEstoque} após a adição bem-sucedida.</li>
+ * <li>Tratamento de erros para entradas não numéricas.</li>
+ * </ul>
  */
 public class TelaAdicionaEstoque extends JDialog
 {
@@ -27,15 +29,15 @@ public class TelaAdicionaEstoque extends JDialog
     /**
      * Construtor da classe {@link TelaAdicionaEstoque}.
      *
-     * Responsável por construir a interface de adição de estoque, configurando
-     * os campos de entrada para o código do produto e a quantidade, além dos botões de ação.
-     * Define o layout visual e as propriedades da janela de diálogo.
+     * Configura a janela de diálogo, seus componentes visuais e os listeners de eventos
+     * para os botões de "Adicionar" e "Sair".
      *
-     * @param owner O {@link JFrame} pai desta janela de diálogo, tipicamente a {@link TelaEditaEstoque}.
+     * @param telaEstoque A instância de {@link TelaEstoque} para recarregar a lista de produtos após a adição.
+     * @param owner O {@link JFrame} pai desta janela de diálogo.
      * @param stock Instância de {@link Estoque} utilizada para gerenciar os produtos.
      * @param cashControl Instância de {@link Caixa} utilizada para controle financeiro.
      */
-    public TelaAdicionaEstoque (JFrame owner, Estoque stock, Caixa cashControl)
+    public TelaAdicionaEstoque (TelaEstoque telaEstoque, JFrame owner, Estoque stock, Caixa cashControl)
     {
         super(owner, "Adiciona Estoque de um Item", true);
         setSize(336,368);
@@ -62,7 +64,7 @@ public class TelaAdicionaEstoque extends JDialog
         gbc.anchor = GridBagConstraints.NORTH;
         mainPanel.add(titleLabel, gbc);
 
-         gbc.insets = new Insets(10, 10, 10, 10);
+        gbc.insets = new Insets(10, 10, 10, 10);
 
         // -- SubTitle Label --
         JLabel subtitleLabel = new JLabel("Preencha os campos abaixo:");
@@ -158,6 +160,7 @@ public class TelaAdicionaEstoque extends JDialog
                                 JOptionPane.showMessageDialog(TelaAdicionaEstoque.this, "Produto não encontrado!", "Produto inexistente", JOptionPane.ERROR_MESSAGE);
                             else
                             {
+                                telaEstoque.loadProducts(stock);
                                 JOptionPane.showMessageDialog(TelaAdicionaEstoque.this, "Quantidade adicionada com Sucesso!", "Quantidade Adicionada", JOptionPane.INFORMATION_MESSAGE);
                                 codeTextField.setText("");
                                 quantityTextField.setText("");

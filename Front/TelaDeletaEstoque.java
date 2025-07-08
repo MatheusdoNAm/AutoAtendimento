@@ -7,18 +7,20 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 /**
- * Tela para deletar um item existente do estoque.
+ * Diálogo para deletar um item completo do estoque.
  *
- * A classe {@link TelaDeletaEstoque} permite ao usuário (administrador)
- * remover um produto do estoque através da inserção de seu código.
- * A interface valida se o campo foi preenchido corretamente e se o produto
- * realmente existe no estoque antes de realizar a exclusão. Uma confirmação
- * é solicitada ao usuário para evitar deleções acidentais.
+ * A classe {@link TelaDeletaEstoque} fornece uma interface para o usuário
+ * inserir o código de um produto e removê-lo completamente do estoque.
+ * Antes da exclusão, uma confirmação é solicitada para evitar remoções acidentais.
  *
- * Esta tela é um {@link JDialog} modal, o que significa que bloqueia a interação
- * com a tela pai enquanto estiver aberta.
- *
- * Utiliza uma instância da classe {@link Estoque} para manipular os dados de estoque.
+ * As operações incluem:
+ * <ul>
+ * <li>Validação de campo de código vazio.</li>
+ * <li>Verificação da existência do produto.</li>
+ * <li>Confirmação do usuário antes de deletar o produto.</li>
+ * <li>Atualização da tabela de produtos na {@link TelaEstoque} após a exclusão.</li>
+ * <li>Tratamento de erros para entradas não numéricas.</li>
+ * </ul>
  */
 public class TelaDeletaEstoque extends JDialog
 {
@@ -27,14 +29,14 @@ public class TelaDeletaEstoque extends JDialog
     /**
      * Construtor da classe {@link TelaDeletaEstoque}.
      *
-     * Responsável por construir a interface de exclusão de produto do estoque,
-     * configurando o campo de entrada para o código do produto e os botões de ação.
-     * Define o layout visual e as propriedades da janela de diálogo.
+     * Configura a janela de diálogo, seus componentes visuais e os listeners de eventos
+     * para os botões de "Deletar" e "Sair".
      *
+     * @param telaEstoque A instância de {@link TelaEstoque} para recarregar a lista de produtos após a exclusão.
      * @param owner O {@link JFrame} pai desta janela de diálogo.
      * @param stock Instância de {@link Estoque} utilizada para gerenciar os produtos.
      */
-    public TelaDeletaEstoque (JFrame owner, Estoque stock)
+    public TelaDeletaEstoque (TelaEstoque telaEstoque, JFrame owner, Estoque stock)
     {
         super(owner, "Deleta um Item do Estoque", true);
         setSize(336,368);
@@ -144,8 +146,10 @@ public class TelaDeletaEstoque extends JDialog
     
                             if (option == JOptionPane.YES_OPTION)
                             {
-                                JOptionPane.showMessageDialog(TelaDeletaEstoque.this, stock.getProductName(code) + " deletado com sucesso", "Produto Deletado", JOptionPane.INFORMATION_MESSAGE);
+                                String productName = stock.getProductName(code);
                                 stock.deleteProduct(code);
+                                telaEstoque.loadProducts(stock);
+                                JOptionPane.showMessageDialog(TelaDeletaEstoque.this, productName + " deletado com sucesso", "Produto Deletado", JOptionPane.INFORMATION_MESSAGE);
                             }
                             codeTextField.setText("");
                         }

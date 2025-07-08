@@ -64,7 +64,7 @@ public class TelaConfirmaPedido extends JDialog {
         title.setFont(new Font("Arial", Font.BOLD, 18));
         panel.add(title, BorderLayout.NORTH);
 
-        // Montar dados da tabela
+        // -- Data Table --
         String[] columnNames = {"Produto", "Quantidade"};
         Object[][] data = cart.entrySet().stream()
                 .filter(e -> e.getValue() > 0)
@@ -82,7 +82,7 @@ public class TelaConfirmaPedido extends JDialog {
         table.setRowHeight(28);
         table.setFont(new Font("Arial", Font.PLAIN, 14));
 
-        // Estilizar cabeçalho
+        // -- Header --
         JTableHeader header = table.getTableHeader();
         header.setBackground(new Color(0, 86, 179));
         header.setForeground(Color.WHITE);
@@ -90,11 +90,11 @@ public class TelaConfirmaPedido extends JDialog {
         header.setReorderingAllowed(false);
         table.setTableHeader(header);
 
-        // Centralizar colunas
+        // -- Columns --
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         centerRenderer.setHorizontalAlignment(SwingConstants.CENTER);
-        table.getColumnModel().getColumn(0).setCellRenderer(centerRenderer); // Produto
-        table.getColumnModel().getColumn(1).setCellRenderer(centerRenderer); // Quantidade
+        table.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
+        table.getColumnModel().getColumn(1).setCellRenderer(centerRenderer); 
 
         JScrollPane scrollPane = new JScrollPane(table);
         scrollPane.setBackground(new Color(197,202,196));
@@ -102,7 +102,7 @@ public class TelaConfirmaPedido extends JDialog {
         scrollPane.setBorder(BorderFactory.createEmptyBorder());
         panel.add(scrollPane, BorderLayout.CENTER);
 
-        // Total
+        // -- Total --
         double total = cart.entrySet().stream()
                 .mapToDouble(e -> stock.getProductsStock().get(e.getKey()).getProduct().getPrice() * e.getValue())
                 .sum();
@@ -112,7 +112,7 @@ public class TelaConfirmaPedido extends JDialog {
         totalLabel.setBorder(new EmptyBorder(10, 0, 10, 0));
         panel.add(totalLabel, BorderLayout.SOUTH);
 
-        // Botões
+        // -- Buttons --
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
         buttonPanel.setBackground(new Color(197,202,196));
 

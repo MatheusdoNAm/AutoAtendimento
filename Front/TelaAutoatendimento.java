@@ -113,7 +113,7 @@ public class TelaAutoatendimento extends JFrame
 
         JButton confirmButton = createCustomButton("Confirmar");
 
-        confirmButton.addActionListener(e -> {
+        confirmButton.addActionListener(_ -> {
             TelaConfirmaPedido telaConfirmacao = new TelaConfirmaPedido(TelaAutoatendimento.this, cart, stock, cashControl, orders);
             telaConfirmacao.setVisible(true);
         });
@@ -126,7 +126,6 @@ public class TelaAutoatendimento extends JFrame
             dispose();
         });
 
-        // Painel para agrupar os dois botões à direita
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 0));
         buttonPanel.setBackground(new Color(197, 202, 196));
         buttonPanel.add(backButton);
@@ -138,7 +137,6 @@ public class TelaAutoatendimento extends JFrame
         mainPanel.add(footerPanel, gbc);
         add(mainPanel);
 
-        // Gerar interface com produtos
         generateProducts(stock.getProductsStock());
     }
 

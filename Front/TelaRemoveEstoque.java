@@ -7,17 +7,20 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 /**
- * Tela para remover quantidade de um item existente no estoque.
+ * Diálogo para remover uma quantidade específica do estoque de um item existente.
  *
- * A classe {@link TelaRemoveEstoque} permite ao usuário (administrador)
- * especificar o código de um produto e a quantidade a ser removida do seu estoque.
- * A interface valida se os campos foram preenchidos corretamente, se a quantidade
- * é um valor positivo e se há estoque suficiente para a remoção.
+ * A classe {@link TelaRemoveEstoque} fornece uma interface gráfica para que o usuário
+ * possa especificar o código de um produto e a quantidade a ser removida do estoque.
+ * Realiza validações de entrada e interage com a lógica da classe {@link Estoque}.
  *
- * Esta tela é um {@link JDialog} modal, o que significa que bloqueia a interação
- * com a tela pai enquanto estiver aberta.
- *
- * Utiliza uma instância da classe {@link Estoque} para manipular os dados de estoque.
+ * As operações incluem:
+ * <ul>
+ * <li>Validação de campos vazios.</li>
+ * <li>Validação de quantidade maior que zero.</li>
+ * <li>Verificação da existência do produto no estoque.</li>
+ * <li>Verificação de estoque suficiente antes da remoção.</li>
+ * <li>Atualização da tabela de produtos na {@link TelaEstoque} após a remoção bem-sucedida.</li>
+ * </ul>
  */
 public class TelaRemoveEstoque extends JDialog
 {
@@ -26,14 +29,14 @@ public class TelaRemoveEstoque extends JDialog
     /**
      * Construtor da classe {@link TelaRemoveEstoque}.
      *
-     * Responsável por construir a interface de remoção de estoque, configurando
-     * os campos de entrada para o código do produto e a quantidade, além dos botões de ação.
-     * Define o layout visual e as propriedades da janela de diálogo.
+     * Configura a janela de diálogo, seus componentes visuais e os listeners de eventos
+     * para os botões de "Remover" e "Sair".
      *
+     * @param telaEstoque A instância de {@link TelaEstoque} para recarregar a lista de produtos após a remoção.
      * @param owner O {@link JFrame} pai desta janela de diálogo.
      * @param stock Instância de {@link Estoque} utilizada para gerenciar os produtos.
      */
-    public TelaRemoveEstoque (JFrame owner, Estoque stock)
+    public TelaRemoveEstoque (TelaEstoque telaEstoque, JFrame owner, Estoque stock)
     {
         super(owner, "Remove Estoque de um Item", true);
         setSize(336,368);
@@ -165,6 +168,7 @@ public class TelaRemoveEstoque extends JDialog
                                 else
                                 {
                                     stock.removeStock(code, quantity);
+                                    telaEstoque.loadProducts(stock);
                                     JOptionPane.showMessageDialog(TelaRemoveEstoque.this, "Quantidade removida com Sucesso!", "Quantidade Removida", JOptionPane.INFORMATION_MESSAGE);
                                     codeTextField.setText("");
                                     quantityTextField.setText("");

@@ -100,7 +100,7 @@ public class TelaAdmin extends JFrame
             {
                 System.out.println("Estoque");
                 TelaEstoque telaEstoque = new TelaEstoque(stock, cashControl, orders);
-                telaEstoque.loadProducts(stock.getProductsStock());
+                telaEstoque.loadProducts(stock);
                 telaEstoque.setVisible(true);
                 dispose();
             }
