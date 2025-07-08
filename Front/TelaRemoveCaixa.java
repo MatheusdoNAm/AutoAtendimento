@@ -5,6 +5,8 @@ import javax.swing.border.BevelBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Diálogo para remover cédulas e moedas do controle de caixa.
@@ -32,7 +34,7 @@ public class TelaRemoveCaixa extends JDialog
     /**
      * Construtor da classe {@link TelaRemoveCaixa}.
      *
-     * Configura a janela de diálogo, seus componentes visuais para entrada de valores
+     * Configura a janela de diálogo, seus componentes visuais para entrada de valuees
      * de cédulas e moedas, e os listeners de eventos para os botões de "Remover" e "Zerar Caixa".
      *
      * @param telaControleCaixa A instância de {@link TelaControleCaixa} para recarregar a tela após as operações.
@@ -279,55 +281,63 @@ public class TelaRemoveCaixa extends JDialog
                 System.out.println("Removendo");
 
                 try {
-                    if
-                    (
-                        (!cashControl.removeCash(100.0, Integer.parseInt(bill100TextField.getText()))) ||
-                        (!cashControl.removeCash(50.0, Integer.parseInt(bill50TextField.getText()))) ||
-                        (!cashControl.removeCash(20.0, Integer.parseInt(bill20TextField.getText()))) ||
-                        (!cashControl.removeCash(10.0, Integer.parseInt(bill10TextField.getText()))) ||
-                        (!cashControl.removeCash(5.0, Integer.parseInt(bill5TextField.getText()))) ||
-                        (!cashControl.removeCash(2.0, Integer.parseInt(bill2TextField.getText()))) ||
-                        (!cashControl.removeCash(1.0, Integer.parseInt(coin1TextField.getText()))) ||
-                        (!cashControl.removeCash(0.5, Integer.parseInt(coin50TextField.getText()))) ||
-                        (!cashControl.removeCash(0.25, Integer.parseInt(coin25TextField.getText()))) ||
-                        (!cashControl.removeCash(0.10, Integer.parseInt(coin10TextField.getText()))) ||
-                        (!cashControl.removeCash(0.05, Integer.parseInt(coin5TextField.getText())))
-                    )
-                        JOptionPane.showMessageDialog(TelaRemoveCaixa.this,
-                            "Quantidade de Notas Insuficientes",
-                            "Falta de Notas em Caixa",
-                            JOptionPane.ERROR_MESSAGE);
-                    else
-                    {
-                        telaControleCaixa.reloadScreen();
-                        bill100TextField.setText("0");
-                        bill50TextField.setText("0");
-                        bill20TextField.setText("0");
-                        bill10TextField.setText("0");
-                        bill5TextField.setText("0");
-                        bill2TextField.setText("0");
-                        coin1TextField.setText("0");
-                        coin50TextField.setText("0");
-                        coin25TextField.setText("0");
-                        coin10TextField.setText("0");
-                        coin5TextField.setText("0");
-                        subtitleLabel.setText("Caixa Atual: R$ " + String.format("%.2f", cashControl.getTotalCash()));
-                        JOptionPane.showMessageDialog(TelaRemoveCaixa.this,
+                    Map<Double, Integer> cashToRemove = new HashMap<>();
+                    cashToRemove.put(100.0, Integer.parseInt(bill100TextField.getText()));
+                    cashToRemove.put(50.0, Integer.parseInt(bill50TextField.getText()));
+                    cashToRemove.put(20.0, Integer.parseInt(bill20TextField.getText()));
+                    cashToRemove.put(10.0, Integer.parseInt(bill10TextField.getText()));
+                    cashToRemove.put(5.0, Integer.parseInt(bill5TextField.getText()));
+                    cashToRemove.put(2.0, Integer.parseInt(bill2TextField.getText()));
+                    cashToRemove.put(1.0, Integer.parseInt(coin1TextField.getText()));
+                    cashToRemove.put(0.5, Integer.parseInt(coin50TextField.getText()));
+                    cashToRemove.put(0.25, Integer.parseInt(coin25TextField.getText()));
+                    cashToRemove.put(0.10, Integer.parseInt(coin10TextField.getText()));
+                    cashToRemove.put(0.05, Integer.parseInt(coin5TextField.getText()));
+
+                    for (Map.Entry<Double, Integer> entry : cashToRemove.entrySet()) {
+                        double value = entry.getKey();
+                        int quantity = entry.getValue();
+
+                        if (cashControl.getQuantityBill(value) < quantity) {
+                            JOptionPane.showMessageDialog(TelaRemoveCaixa.this,
+                                    "Quantidade insuficiente em Caixa",
+                                    "Falta de Notas",
+                                    JOptionPane.ERROR_MESSAGE);
+                            return;
+                        }
+                    }
+
+                    for (Map.Entry<Double, Integer> entry : cashToRemove.entrySet()) {
+                        cashControl.removeCash(entry.getKey(), entry.getValue());
+                    }
+
+                    bill100TextField.setText("0");
+                    bill50TextField.setText("0");
+                    bill20TextField.setText("0");
+                    bill10TextField.setText("0");
+                    bill5TextField.setText("0");
+                    bill2TextField.setText("0");
+                    coin1TextField.setText("0");
+                    coin50TextField.setText("0");
+                    coin25TextField.setText("0");
+                    coin10TextField.setText("0");
+                    coin5TextField.setText("0");
+                    subtitleLabel.setText("Caixa Atual: R$ " + String.format("%.2f", cashControl.getTotalCash()));
+
+                    telaControleCaixa.reloadScreen();
+
+                    JOptionPane.showMessageDialog(TelaRemoveCaixa.this,
                             "Cédulas Removidas do caixa!",
                             "Removido com Sucesso",
                             JOptionPane.INFORMATION_MESSAGE);
-                    }
-                }
-                catch (NumberFormatException ex)
-                {
+
+                } catch (NumberFormatException ex) {
                     JOptionPane.showMessageDialog(TelaRemoveCaixa.this,
                             "Por favor, preencha todos os campos com números inteiros válidos.",
                             "Erro de Entrada",
                             JOptionPane.ERROR_MESSAGE);
-                    return;
                 }
             }
-            
         });
 
         // -- Clear Cash Button --
@@ -394,7 +404,7 @@ public class TelaRemoveCaixa extends JDialog
 
     /**
      * Cria um campo de texto ({@link JTextField}) predefinido para entrada de quantidades de cédulas/moedas.
-     * O campo é inicializado com o valor "0" e possui um estilo visual específico.
+     * O campo é inicializado com o value "0" e possui um estilo visual específico.
      *
      * @return Um {@link JTextField} estilizado.
      */

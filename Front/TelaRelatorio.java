@@ -12,30 +12,34 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
 /**
- * Tela de Geração de Relatórios do Sistema.
- *
- * A classe {@link TelaRelatorio} oferece uma interface para que o administrador
- * gere diferentes tipos de relatórios sobre as operações da cantina. O usuário
- * pode selecionar o tipo de relatório desejado e especificar um intervalo de datas.
- *
- * Funcionalidades principais:
- * <ul>
- * <li>Seleção do tipo de relatório a ser gerado (Produtos mais Vendidos, Transações Realizadas,
- * Produtos Vencidos ou Próximos de Vencer).</li>
- * <li>Definição de uma data inicial e uma data final para o período do relatório,
- * com validação de formato (DD/MM/AAAA) e lógica de datas (data inicial não pode ser
- * posterior à data final; nenhuma data pode estar no passado).</li>
- * <li>Botão "Gerar Relatório" para processar a solicitação com base nas seleções.</li>
- * <li>Botão "Voltar" para retornar à tela de administração ({@link TelaAdmin}).</li>
- * </ul>
- *
- * Utiliza instâncias das classes {@link Estoque}, {@link Caixa} e {@link ControlePedidos}
- * para acessar os dados necessários para a geração dos relatórios.
- */
+  * Tela de Geração de Relatórios do Sistema.
+  *
+  * A classe {@link TelaRelatorio} oferece uma interface para que o administrador
+  * gere diferentes tipos de relatórios sobre as operações da cantina. O usuário
+  * pode selecionar o tipo de relatório desejado e especificar um intervalo de datas.
+  *
+  * <p>
+  * Funcionalidades principais:
+  * <ul>
+  * <li>Seleção do tipo de relatório a ser gerado (Produtos mais Vendidos, Transações Realizadas,
+  * Produtos Vencidos ou Próximos de Vencer).</li>
+  * <li>Definição de uma data inicial e uma data final para o período do relatório,
+  * com validação de formato (DD/MM/AAAA) e lógica de datas (data inicial não pode ser
+  * posterior à data final; nenhuma data pode estar no passado).</li>
+  * com validação de formato (DD/MM/AAAA). A data inicial deve ser anterior ou igual à data final.</li>
+  * <li>Botão "Gerar Relatório" para processar a solicitação com base nas seleções.</li>
+  * <li>Botão "Voltar" para retornar à tela de administração ({@link TelaAdmin}).</li>
+  * <li>Desabilitação dos campos de data para o relatório de "Produtos Vencidos ou Próximos a Vencer",
+  * já que este relatório não depende de um intervalo de datas.</li>
+  * </ul>
+  *
+  * <p>
+  * Utiliza instâncias das classes {@link Estoque}, {@link Caixa} e {@link ControlePedidos}
+  * para acessar os dados necessários para a geração dos relatórios.
+  */
 public class TelaRelatorio extends JFrame
 {
     private JFormattedTextField startTextField, endTextField;
-
     /**
      * Construtor da classe {@link TelaRelatorio}.
      *
@@ -45,7 +49,7 @@ public class TelaRelatorio extends JFrame
      *
      * @param stock Instância de {@link Estoque} utilizada para gerenciar os produtos.
      * @param cashControl Instância de {@link Caixa} utilizada para controle financeiro.
-     0* @param orders Instância de {@link ControlePedidos} utilizada para manipular os pedidos feitos.
+     * @param orders Instância de {@link ControlePedidos} utilizada para manipular os pedidos feitos.
      */
     public TelaRelatorio(Estoque stock, Caixa cashControl, ControlePedidos orders)
     {
@@ -133,6 +137,14 @@ public class TelaRelatorio extends JFrame
             e.printStackTrace();
         }
 
+        updateDateFieldsEditability(comboType);
+
+        comboType.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                updateDateFieldsEditability(comboType);
+            }
+        });
         // -- Generate Report Button --
         JButton generateButton = new JButton("Gerar Relatório");
         generateButton.setBackground(new Color(0, 86, 179));
@@ -145,68 +157,57 @@ public class TelaRelatorio extends JFrame
         generateButton.addActionListener(new ActionListener()
         {
             @Override
-            public void actionPerformed (ActionEvent e)
-            {
-                if (startTextField.getText().isEmpty() || endTextField.getText().isEmpty()
-                    || startTextField.getText().equals("__/__/____") || endTextField.getText().equals("__/__/____"))
-                {
-                    JOptionPane.showMessageDialog(TelaRelatorio.this, 
-                            "Preencha Todas as Datas", 
-                            "Erro Cadastro", 
-                            JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
-                else
-                {
-                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            public void actionPerformed(ActionEvent e) {
+               String selectedReport = comboType.getSelectedItem().toString();
 
-                    try {
-                        LocalDate startDate = LocalDate.parse(startTextField.getText(), formatter);
-                        LocalDate endDate = LocalDate.parse(endTextField.getText(), formatter);
+               if (selectedReport.equals("Produtos Vencidos ou Próximos de Vencer")) {
+                   // Para "Produtos Vencidos", não importa o valor das datas
+                   TelaMostraRelatorio telaMostraRelatorio = new TelaMostraRelatorio(
+                           TelaRelatorio.this,
+                           selectedReport,
+                           null, // Datas não são relevantes para este relatório
+                           null,
+                           stock,
+                           cashControl,
+                           orders
+                   );
+                   telaMostraRelatorio.setVisible(true);
+               } else {
+                   // Para outros relatórios, as datas são necessárias e validadas
+                   if (startTextField.getText().isEmpty() || endTextField.getText().isEmpty()
+                           || startTextField.getText().equals("__/__/____") || endTextField.getText().equals("__/__/____")) {
+                       JOptionPane.showMessageDialog(TelaRelatorio.this,
+                               "Preencha Todas as Datas",
+                               "Erro Cadastro",
+                               JOptionPane.ERROR_MESSAGE);
+                       return;
+                   }
 
-                        if (startDate.isBefore(LocalDate.now()) || endDate.isBefore(LocalDate.now()))
-                        {
-                            JOptionPane.showMessageDialog(TelaRelatorio.this,
-                                    "Nenhuma Data pode estar no Passado.",
-                                    "Data no Passado",
-                                    JOptionPane.ERROR_MESSAGE);
-                            return;
-                        }
+                   DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+                   try {
+                       LocalDate startDate = LocalDate.parse(startTextField.getText(), formatter);
+                       LocalDate endDate = LocalDate.parse(endTextField.getText(), formatter);
 
-                        if (startDate.isAfter(endDate))
-                        {
-                            JOptionPane.showMessageDialog(TelaRelatorio.this,
-                                    "A data inicial deve ser anterior ou igual à data final.",
-                                    "Erro de Intervalo",
-                                    JOptionPane.ERROR_MESSAGE);
-                            return;
-                        }
+                       if (startDate.isAfter(endDate)) {
+                           JOptionPane.showMessageDialog(TelaRelatorio.this,
+                                   "A data inicial deve ser anterior ou igual à data final.",
+                                   "Erro de Intervalo",
+                                   JOptionPane.ERROR_MESSAGE);
+                           return;
+                       }
 
-                        if(comboType.getSelectedItem().toString().equals("Produtos mais Vendidos"))
-                        {
-                            System.out.println("Relatórios de Produtos Mais vendidos");
-                        }
-                        else
-                            if(comboType.getSelectedItem().toString().equals("Transações Realizadas"))
-                            {
-                                System.out.println("Relatórios de Transações Realizadas");
-                            }
-                            else
-                            
-                                if(comboType.getSelectedItem().toString().equals("Produtos Vencidos ou Próximos de Vencer"))
-                                {
-                                    System.out.println("Relatórios de Produtos Vencidos ou Próximos de Vencer");
-                                }
+                       TelaMostraRelatorio telaMostraRelatorio = new TelaMostraRelatorio(TelaRelatorio.this, selectedReport, startDate, endDate, stock, cashControl, orders);
+                       telaMostraRelatorio.setVisible(true);
 
-                    } catch (DateTimeParseException ex) {
-                        JOptionPane.showMessageDialog(TelaRelatorio.this,
-                        "Formato de data inválido. Use DD/MM/AAAA.",
-                                "Erro de Formato",
-                                JOptionPane.ERROR_MESSAGE);
-                    }
-                }
-            }
-        });
+                   } catch (DateTimeParseException ex) {
+                       JOptionPane.showMessageDialog(TelaRelatorio.this,
+                               "Formato de data inválido. Use DD/MM/AAAA.",
+                               "Erro de Formato",
+                               JOptionPane.ERROR_MESSAGE);
+                   }
+               }
+           }
+       });
 
         // -- Back Button --
         JButton backButton = new JButton("Voltar");
@@ -232,5 +233,25 @@ public class TelaRelatorio extends JFrame
         });
 
         add(mainPanel, BorderLayout.CENTER);
+    }
+
+    /**
+     * Atualiza a editabilidade e a aparência dos campos de data.
+     *
+     * Este método habilita ou desabilita os campos de data inicial e final,
+     * e altera a cor do texto para indicar visualmente se eles estão ativos.
+     * Os campos são desabilitados e ficam com a cor cinza escuro quando o tipo de
+     * relatório selecionado é "Produtos Vencidos ou Próximos de Vencer", pois
+     * este relatório não utiliza um intervalo de datas. Para outros tipos de
+     * relatório, os campos são habilitados e a cor do texto volta para preto.
+     *
+     * @param comboType O {@link JComboBox} que contém o tipo de relatório selecionado.
+     */
+    private void updateDateFieldsEditability(JComboBox<String> comboType) {
+        boolean enableDates = !comboType.getSelectedItem().equals("Produtos Vencidos ou Próximos de Vencer");
+        startTextField.setEditable(enableDates);
+        endTextField.setEditable(enableDates);
+        startTextField.setForeground(enableDates ? Color.BLACK : new Color(43, 45, 47));
+        endTextField.setForeground(enableDates ? Color.BLACK : new Color(43, 45, 47));
     }
 }

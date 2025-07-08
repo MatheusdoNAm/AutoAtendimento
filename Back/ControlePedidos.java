@@ -24,4 +24,9 @@ public class ControlePedidos
     {
         orders.add(order);
     }
+
+    public static ArrayList<Pedido> getOrders()
+    {
+        return orders;
+    }
 }
