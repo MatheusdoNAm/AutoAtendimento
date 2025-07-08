@@ -9,12 +9,44 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Tela de Autoatendimento da Cantina.
+ *
+ * A classe {@link TelaAutoatendimento} representa a interface onde os usuários
+ * podem selecionar produtos do estoque para realizar uma compra. Os produtos são
+ * exibidos por categoria, e o usuário pode adicionar ou remover quantidades de cada item
+ * em um carrinho virtual. O total da compra é atualizado dinamicamente.
+ *
+ * Funcionalidades principais:
+ * <ul>
+ * <li>Exibição de produtos disponíveis, categorizados por tipo (Comida, Bebida, Sobremesa).</li>
+ * <li>Controle de quantidade de itens no carrinho através de botões de adição e remoção.</li>
+ * <li>Atualização em tempo real do valor total do pedido.</li>
+ * <li>Confirmação do pedido, que leva à tela de pagamento ({@link TelaConfirmaPedido}).</li>
+ * <li>Opção para retornar à tela inicial de compra ({@link TelaIniciarCompra}).</li>
+ * </ul>
+ *
+ * Utiliza instâncias das classes {@link Estoque}, {@link Caixa} e {@link ControlePedidos}
+ * para gerenciar os dados do sistema durante o processo de compra.
+ */
 public class TelaAutoatendimento extends JFrame
 {
     private JLabel totalLabel;
     private JPanel contentPanel;
     private Map<Integer, Integer> cart = new HashMap<>();
 
+    /**
+     * Construtor da classe {@link TelaAutoatendimento}.
+     *
+     * Inicializa a interface de autoatendimento, configurando o layout,
+     * o painel de conteúdo rolável para exibir os produtos, o rótulo do total
+     * e os botões de ação (Confirmar e Voltar). Popula a tela com os produtos
+     * disponíveis no estoque.
+     *
+     * @param stock Instância de {@link Estoque} utilizada para gerenciar os produtos.
+     * @param cashControl Instância de {@link Caixa} utilizada para controle financeiro.
+     * @param orders Instância de {@link ControlePedidos} utilizada para manipular os pedidos feitos.
+     */
     public TelaAutoatendimento(Estoque stock, Caixa cashControl, ControlePedidos orders)
     {
         setTitle("Cantina - Autoatendimento");
@@ -224,6 +256,16 @@ public class TelaAutoatendimento extends JFrame
         contentPanel.repaint();
     }
 
+    /**
+     * Atualiza o valor total exibido no rodapé da tela com base nos itens do carrinho.
+     *
+     * Percorre todos os itens no carrinho, calcula o subtotal de cada um
+     * (quantidade * preço) e soma para obter o total geral, que é então formatado
+     * e exibido no {@link JLabel} correspondente.
+     *
+     * @param stock Um {@link Map} contendo os produtos em estoque, usado para obter
+     * o preço de cada {@link ProdutoEmEstoque} no carrinho.
+     */
     private void updateTotal(Map<Integer, ProdutoEmEstoque> stock)
     {
         double total = 0;
@@ -238,6 +280,14 @@ public class TelaAutoatendimento extends JFrame
         totalLabel.setText("Total: R$ " + String.format("%.2f", total));
     }
 
+    /**
+     * Método auxiliar para criação de botões estilizados usados na {@link TelaAutoatendimento}.
+     * 
+     * Configura cor de fundo, cor da fonte, fonte, borda e tamanho do botão.
+     *
+     * @param text Texto a ser exibido no botão.
+     * @return {@link JButton} estilizado e formatado para o layout da tela.
+     */
     private JButton createCustomButton(String text)
     {
         JButton button = new JButton(text);

@@ -6,10 +6,34 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+/**
+ * Tela para deletar um item existente do estoque.
+ *
+ * A classe {@link TelaDeletaEstoque} permite ao usuário (administrador)
+ * remover um produto do estoque através da inserção de seu código.
+ * A interface valida se o campo foi preenchido corretamente e se o produto
+ * realmente existe no estoque antes de realizar a exclusão. Uma confirmação
+ * é solicitada ao usuário para evitar deleções acidentais.
+ *
+ * Esta tela é um {@link JDialog} modal, o que significa que bloqueia a interação
+ * com a tela pai enquanto estiver aberta.
+ *
+ * Utiliza uma instância da classe {@link Estoque} para manipular os dados de estoque.
+ */
 public class TelaDeletaEstoque extends JDialog
 {
     private JTextField codeTextField;
 
+    /**
+     * Construtor da classe {@link TelaDeletaEstoque}.
+     *
+     * Responsável por construir a interface de exclusão de produto do estoque,
+     * configurando o campo de entrada para o código do produto e os botões de ação.
+     * Define o layout visual e as propriedades da janela de diálogo.
+     *
+     * @param owner O {@link JFrame} pai desta janela de diálogo.
+     * @param stock Instância de {@link Estoque} utilizada para gerenciar os produtos.
+     */
     public TelaDeletaEstoque (JFrame owner, Estoque stock)
     {
         super(owner, "Deleta um Item do Estoque", true);
@@ -158,6 +182,14 @@ public class TelaDeletaEstoque extends JDialog
         add(mainPanel);
     }
 
+    /**
+     * Método auxiliar para criação de botões estilizados usados na {@link TelaDeletaEstoque}.
+     * 
+     * Configura cor de fundo, cor da fonte, fonte, borda e tamanho do botão.
+     *
+     * @param text Texto a ser exibido no botão.
+     * @return {@link JButton} estilizado e formatado para o layout da tela.
+     */
     public JButton createCustomButton (String text)
     {
         JButton button = new JButton(text);

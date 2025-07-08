@@ -1,21 +1,22 @@
 package Front;
 import javax.swing.*;
 import javax.swing.border.BevelBorder;
-
-import Back.Caixa;
-import Back.ControlePedidos;
-import Back.Estoque;
-
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 /**
- * Gera a Tela de Confirmação de usuário Administrador do Sistema, através de uma tela de diálogo.
- * 
- * O Acesso a Tela de Administração do Sistema somente ocorrerá se o usuário realizar o login de 
- * administrador, com um {@link JTextField} para a inserção do login, e um {@link JPasswordField}
- * para a inserção de senha, junto de um {@link JButton} para verificação dos dados.
+ * Tela de Login para Administradores.
+ *
+ * A classe {@link TelaLogin} representa uma interface modal que solicita ao usuário
+ * credenciais para acesso à área administrativa do sistema. A autenticação é baseada
+ * em uma comparação com credenciais padrão definidas internamente.
+ *
+ * Esta tela é exibida como um {@link JDialog} modal, bloqueando a interação com a 
+ * janela principal até que o login seja concluído ou cancelado.
+ *
+ * Se o login for bem-sucedido, o método {@link #isLoginSucessful()} retorna {@code true},
+ * permitindo o redirecionamento para a {@link TelaAdmin}.
  */
 public class TelaLogin extends JDialog
 {
@@ -23,15 +24,13 @@ public class TelaLogin extends JDialog
     private JPasswordField passwordField;
     private boolean isSuccessful = false;
 
+    
     /**
      * Construtor da classe {@link TelaLogin}.
-     * 
-     * Responsável por desenhar ao usuário toda a estrutura da tela, seus campos de inserção e
-     * botão e realizar o controle do funcionamento do Botão de Confirmação.
-     * 
-     * @param owner Referência da Tela que chamou a Tela de Login. A Tela "Dona" é usada para
-     * configurar a posição do Diálogo para o usuário e também bloquear a tela "Dona" até a
-     * finalização e fechamento da Tela Diálogo de Login.
+     *
+     * Inicializa e exibe a tela de login modal, solicitando usuário e senha.
+     *
+     * @param owner A janela principal que invoca a tela de login.
      */
     public TelaLogin (JFrame owner)
     {
@@ -140,9 +139,12 @@ public class TelaLogin extends JDialog
     }
     
     /**
-     * Método auxiliar para criação e configuração visual dos botões da Tela {@link TelaLogin}.
-     * @param text String que aparecerá no botão.
-     * @return retorna um {@link JButton} formatado visualmente.
+     * Método auxiliar para criação de botões estilizados usados na {@link TelaLogin}.
+     * 
+     * Configura cor de fundo, cor da fonte, fonte, borda e tamanho do botão.
+     *
+     * @param text Texto a ser exibido no botão.
+     * @return {@link JButton} estilizado e formatado para o layout da tela.
      */
     private JButton createCustomButton(String text)
     {
@@ -158,14 +160,10 @@ public class TelaLogin extends JDialog
     }
 
     /**
-     * Método para validação se os dados inseridos de login e senha condizem com o usuário
-     * administrador.
+     * Método que compara as credenciais inseridas com as credenciais padrão.
      * 
-     * O método converte os dados presentes em {@code userTextField} e {@code passwordField}
-     * em Strings, comparando com o usuário administrador padrão
-     * Caso os dados coincidam, ele altera o atributo  {@code boolean isSucessful} para true,
-     * caso contrário, imprime na tela um PopUp informando que os dados não coincidem, usando
-     * {@link JOptionPane}.
+     * Se as credenciais forem válidas, fecha a janela e define {@link #isSuccessful} como verdadeiro.
+     * Caso contrário, exibe uma mensagem de erro e limpa o campo de senha.
      */
     private void compareUserInput()
     {
@@ -190,9 +188,9 @@ public class TelaLogin extends JDialog
     }
 
     /**
-     * Retorna o estado do Atributo {@code boolean isLoginSucessful}
-     * 
-     * @return isLoginSucessful (true ou false).
+     * Retorna o status do login após a tentativa.
+     *
+     * @return {@code true} se o login foi bem-sucedido, {@code false} caso contrário.
      */
     public boolean isLoginSucessful()
     {

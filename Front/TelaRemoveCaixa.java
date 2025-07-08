@@ -2,18 +2,51 @@ package Front;
 import Back.*;
 import javax.swing.*;
 import javax.swing.border.BevelBorder;
-
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+/**
+ * Tela para remover dinheiro do caixa do sistema.
+ *
+ * A classe {@link TelaRemoveCaixa} permite que o administrador retire cédulas e moedas
+ * de diferentes valores do caixa do sistema. A interface exibe o valor atual do caixa
+ * e campos de entrada para cada denominação de dinheiro, permitindo que o usuário
+ * especifique a quantidade a ser removida.
+ *
+ * Funcionalidades principais:
+ * <ul>
+ * <li>Exibe o valor total atual do caixa.</li>
+ * <li>Permite remover quantidades específicas de cada denominação de cédula e moeda.</li>
+ * <li>Valida se a quantidade a ser removida não excede o que está disponível no caixa.</li>
+ * <li>Oferece uma opção para **zerar completamente o caixa**, com uma confirmação de segurança.</li>
+ * <li>Botão "Voltar" que fecha a tela de diálogo, retornando à tela de controle de caixa ({@link TelaControleCaixa}).</li>
+ * </ul>
+ *
+ * Em caso de tentativa de remoção de valor maior que o disponível, uma mensagem de erro é exibida.
+ *
+ * Utiliza instâncias das classes {@link Estoque}, {@link Caixa} e {@link ControlePedidos}
+ * para interagir com os dados do sistema, especialmente o controle financeiro do caixa.
+ */
 public class TelaRemoveCaixa extends JDialog
 {
     private JTextField bill100TextField, bill50TextField, bill20TextField, bill10TextField,
                     bill5TextField, bill2TextField, coin1TextField, coin50TextField, coin25TextField,
                     coin10TextField, coin5TextField;
 
-    public TelaRemoveCaixa(JFrame owner, Estoque stock, Caixa cashRegister, ControlePedidos orders)
+    /**
+     * Construtor da classe {@link TelaRemoveCaixa}.
+     *
+     * Responsável por construir a interface de remoção de dinheiro do caixa,
+     * configurando os campos de entrada para cédulas e moedas e os botões de ação.
+     * Define o layout visual e as propriedades da janela de diálogo.
+     *
+     * @param owner O {@link JFrame} pai desta janela de diálogo, geralmente a {@link TelaControleCaixa}.
+     * @param stock Instância de {@link Estoque} utilizada para gerenciar os produtos.
+     * @param cashControl Instância de {@link Caixa} utilizada para controle financeiro.
+     * @param orders Instância de {@link ControlePedidos} utilizada para manipular os pedidos feitos.
+     */
+    public TelaRemoveCaixa(JFrame owner, Estoque stock, Caixa cashControl, ControlePedidos orders)
     {
         super(owner, "Remover do Caixa", true);
         setSize(480,450);
@@ -41,7 +74,7 @@ public class TelaRemoveCaixa extends JDialog
         mainPanel.add(titleLabel, gbc);
 
         // -- Subtitle Label --
-        JLabel subtitleLabel = new JLabel("Caixa Atual: R$ " + String.format("%.2f", cashRegister.getTotalCash()));
+        JLabel subtitleLabel = new JLabel("Caixa Atual: R$ " + String.format("%.2f", cashControl.getTotalCash()));
         subtitleLabel.setFont(new Font("Arial", Font.BOLD, 15));
         gbc.gridy = 1;
         gbc.gridwidth = 1;
@@ -253,17 +286,17 @@ public class TelaRemoveCaixa extends JDialog
                 try {
                     if
                     (
-                        (!cashRegister.removeCash(100.0, Integer.parseInt(bill100TextField.getText()))) ||
-                        (!cashRegister.removeCash(50.0, Integer.parseInt(bill50TextField.getText()))) ||
-                        (!cashRegister.removeCash(20.0, Integer.parseInt(bill20TextField.getText()))) ||
-                        (!cashRegister.removeCash(10.0, Integer.parseInt(bill10TextField.getText()))) ||
-                        (!cashRegister.removeCash(5.0, Integer.parseInt(bill5TextField.getText()))) ||
-                        (!cashRegister.removeCash(2.0, Integer.parseInt(bill2TextField.getText()))) ||
-                        (!cashRegister.removeCash(1.0, Integer.parseInt(coin1TextField.getText()))) ||
-                        (!cashRegister.removeCash(0.5, Integer.parseInt(coin50TextField.getText()))) ||
-                        (!cashRegister.removeCash(0.25, Integer.parseInt(coin25TextField.getText()))) ||
-                        (!cashRegister.removeCash(0.10, Integer.parseInt(coin10TextField.getText()))) ||
-                        (!cashRegister.removeCash(0.05, Integer.parseInt(coin5TextField.getText())))
+                        (!cashControl.removeCash(100.0, Integer.parseInt(bill100TextField.getText()))) ||
+                        (!cashControl.removeCash(50.0, Integer.parseInt(bill50TextField.getText()))) ||
+                        (!cashControl.removeCash(20.0, Integer.parseInt(bill20TextField.getText()))) ||
+                        (!cashControl.removeCash(10.0, Integer.parseInt(bill10TextField.getText()))) ||
+                        (!cashControl.removeCash(5.0, Integer.parseInt(bill5TextField.getText()))) ||
+                        (!cashControl.removeCash(2.0, Integer.parseInt(bill2TextField.getText()))) ||
+                        (!cashControl.removeCash(1.0, Integer.parseInt(coin1TextField.getText()))) ||
+                        (!cashControl.removeCash(0.5, Integer.parseInt(coin50TextField.getText()))) ||
+                        (!cashControl.removeCash(0.25, Integer.parseInt(coin25TextField.getText()))) ||
+                        (!cashControl.removeCash(0.10, Integer.parseInt(coin10TextField.getText()))) ||
+                        (!cashControl.removeCash(0.05, Integer.parseInt(coin5TextField.getText())))
                     )
                         JOptionPane.showMessageDialog(TelaRemoveCaixa.this,
                             "Quantidade de Notas Insuficientes",
@@ -312,7 +345,7 @@ public class TelaRemoveCaixa extends JDialog
                 if (option == JOptionPane.YES_OPTION)
                 {
                     JOptionPane.showMessageDialog(TelaRemoveCaixa.this, "Caixa Zerado com Sucesso!", "Caixa Zerado", JOptionPane.INFORMATION_MESSAGE);
-                    cashRegister.clearCashControl();
+                    cashControl.clearCashControl();
                 }
             }
         });
@@ -337,6 +370,14 @@ public class TelaRemoveCaixa extends JDialog
         add(mainPanel);
     }
 
+    /**
+     * Método auxiliar para criar um {@link JTextField} padronizado para entrada de quantidades.
+     *
+     * O campo de texto é inicializado com "0", possui uma cor de fundo específica,
+     * uma borda de chanfro rebaixada e um tamanho preferencial fixo.
+     *
+     * @return Um {@link JTextField} configurado para entrada de números inteiros.
+     */
     public JTextField createTextField()
     {
         JTextField textField = new JTextField("0");
@@ -347,6 +388,14 @@ public class TelaRemoveCaixa extends JDialog
         return textField;
     }
 
+    /**
+     * Método auxiliar para criação de botões estilizados usados na {@link TelaRemoveCaixa}.
+     * 
+     * Configura cor de fundo, cor da fonte, fonte, borda e tamanho do botão.
+     *
+     * @param text Texto a ser exibido no botão.
+     * @return {@link JButton} estilizado e formatado para o layout da tela.
+     */
     public JButton createCustomButton (String text)
     {
         JButton button = new JButton(text);

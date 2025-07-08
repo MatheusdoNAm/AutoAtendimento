@@ -5,8 +5,40 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+/**
+ * Tela de Opções de Edição do Estoque.
+ *
+ * A classe {@link TelaEditaEstoque} funciona como um hub para as diferentes operações
+ * de modificação do estoque do sistema. Ela apresenta botões que direcionam
+ * o usuário para telas específicas de gerenciamento.
+ *
+ * Funcionalidades oferecidas:
+ * <ul>
+ * <li>Acesso à tela para **adicionar quantidade** a um produto existente ({@link TelaAdicionaEstoque}).</li>
+ * <li>Acesso à tela para **remover quantidade** de um produto existente ({@link TelaRemoveEstoque}).</li>
+ * <li>Acesso à tela para **deletar um produto** completamente do estoque ({@link TelaDeletaEstoque}).</li>
+ * <li>Opção para retornar à tela de visualização do estoque ({@link TelaEstoque}).</li>
+ * </ul>
+ *
+ * Esta tela é um {@link JDialog} modal, o que significa que bloqueia a interação
+ * com a tela pai enquanto estiver aberta.
+ *
+ * Utiliza instâncias das classes {@link Estoque} e {@link Caixa} para garantir
+ * a continuidade dos dados entre as telas de edição.
+ */
 public class TelaEditaEstoque extends JDialog
 {
+    /**
+     * Construtor da classe {@link TelaEditaEstoque}.
+     *
+     * Inicializa a interface de edição de estoque, configurando os botões
+     * para as operações de adicionar, remover e deletar produtos, bem como
+     * o botão para voltar. Define o layout visual e as propriedades da janela de diálogo.
+     *
+     * @param owner O {@link JFrame} pai desta janela de diálogo, tipicamente a {@link TelaEstoque}.
+     * @param stock Instância de {@link Estoque} utilizada para gerenciar os produtos.
+     * @param cashControl Instância de {@link Caixa} utilizada para controle financeiro.0
+     */
     public TelaEditaEstoque(JFrame owner, Estoque stock, Caixa cashControl)
     {
         super(owner, "Edição Estoque", true);
@@ -128,6 +160,14 @@ public class TelaEditaEstoque extends JDialog
         add(mainPanel);
     }
 
+    /**
+     * Método auxiliar para criação de botões estilizados usados na {@link TelaEditaEstoque}.
+     * 
+     * Configura cor de fundo, cor da fonte, fonte, borda e tamanho do botão.
+     *
+     * @param text Texto a ser exibido no botão.
+     * @return {@link JButton} estilizado e formatado para o layout da tela.
+     */
     private JButton createCustomButton(String text)
     {
         JButton button = new JButton(text);

@@ -12,14 +12,40 @@ import java.awt.Font;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
-import Back.Produto;
-import Back.ProdutoEmEstoque;
 
+/**
+ * Tela de Controle de Estoque.
+ *
+ * A classe {@link TelaEstoque} exibe os produtos disponíveis no estoque,
+ * agrupados por categoria. Permite a visualização do código, nome, preço,
+ * quantidade em estoque e validade de cada produto.
+ *
+ * Oferece funcionalidades para:
+ * <ul>
+ * <li>Visualizar o estoque atual do sistema;</li>
+ * <li>Acessar a tela de edição de estoque ({@link TelaEditaEstoque});</li>
+ * <li>Retornar à tela de administração ({@link TelaAdmin}).</li>
+ * </ul>
+ *
+ * Utiliza instâncias das classes {@link Estoque}, {@link Caixa} e {@link ControlePedidos}
+ * para manter a continuidade dos dados e funcionalidades do sistema.
+ */
 public class TelaEstoque extends JFrame
 {
 
     private JPanel mainPanel;
 
+    /**
+     * Construtor da classe {@link TelaEstoque}.
+     *
+     * Responsável por construir a interface de controle de estoque, configurando a tabela
+     * de produtos e os botões de ação para alterar o estoque e voltar à tela anterior.
+     * Define o layout visual e as propriedades da janela.
+     *
+     * @param stock Instância de {@link Estoque} utilizada para gerenciar os produtos.
+     * @param cashControl Instância de {@link Caixa} utilizada para controle financeiro.
+     * @param orders Instância de {@link ControlePedidos} utilizada para manipular os pedidos feitos.
+     */
     public TelaEstoque(Estoque stock, Caixa cashControl, ControlePedidos orders)
     {
         setTitle("Controle de Estoque");
@@ -71,6 +97,16 @@ public class TelaEstoque extends JFrame
         add(buttonPanel, BorderLayout.SOUTH);
     }
 
+    /**
+     * Carrega e exibe os produtos no estoque na interface.
+     *
+     * Este método limpa o conteúdo atual do painel principal, adiciona o título
+     * novamente e, em seguida, agrupa os produtos por categoria. Para cada categoria,
+     * é criada e adicionada uma tabela com os detalhes dos produtos.
+     *
+     * @param productsStock Um {@link Map} contendo os produtos em estoque, onde a chave é
+     * o código do produto e o valor é uma instância de {@link ProdutoEmEstoque}.
+     */
     public void loadProducts(Map<Integer, ProdutoEmEstoque> productsStock)
     {
         mainPanel.removeAll();
@@ -117,6 +153,19 @@ public class TelaEstoque extends JFrame
         mainPanel.repaint();
     }
 
+    /**
+     * Cria um painel JPanel contendo o título de uma categoria e uma tabela
+     * com os dados dos produtos pertencentes a essa categoria.
+     *
+     * O painel inclui um título estilizado para a categoria e uma {@link JTable}
+     * não editável que exibe o código, produto, preço, quantidade e validade dos itens.
+     * As células da tabela são centralizadas.
+     *
+     * @param titulo O título da categoria a ser exibido.
+     * @param dados Um array bidimensional de {@link Object} contendo os dados dos produtos,
+     * onde cada linha representa um produto e cada coluna, uma de suas propriedades.
+     * @return Um {@link JPanel} estilizado contendo o título da categoria e a tabela de produtos.
+     */
     private JPanel createCategory(String titulo, Object[][] dados)
     {
         JPanel panel = new JPanel();
@@ -173,7 +222,16 @@ public class TelaEstoque extends JFrame
 
         return panel;
     }
-
+    
+    /**
+     * Método auxiliar para criação de botões estilizados usados na {@link TelaLogin}.
+     * 
+     * Configura cor de fundo, cor da fonte, fonte, borda e tamanho do botão.
+     *
+     * @param text Texto a ser exibido no botão.
+     * @param bg A cor de fundo do botão.
+     * @return Um {@link JButton} estilizado e formatado para o layout da tela.
+     */
     private JButton createCustomButton(String text, Color bg)
     {
         JButton button = new JButton(text);

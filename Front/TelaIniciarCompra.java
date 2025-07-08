@@ -3,8 +3,37 @@ import Back.*;
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * Tela Inicial para Iniciar Compras.
+ *
+ * A classe {@link TelaIniciarCompra} atua como a interface inicial para usuários
+ * comuns que desejam realizar compras no sistema de cantina. Ela oferece a opção
+ * principal para iniciar um novo pedido no modo de autoatendimento.
+ *
+ * Funcionalidades principais:
+ * <ul>
+ * <li>Permite iniciar um novo pedido, direcionando o usuário para a tela de autoatendimento ({@link TelaAutoatendimento}).</li>
+ * <li>Oferece uma opção para "Sair", que, neste contexto de usuário comum,
+ * redireciona para a {@link TelaLogin} para validação de administrador, visto que um usuário comum não deve poder sair do terminal,
+ * e após login bem-sucedido, volta para a {@link TelaInicial} (tela principal de seleção de perfil).</li>
+ * </ul>
+ *
+ * Utiliza instâncias das classes {@link Estoque}, {@link Caixa} e {@link ControlePedidos}
+ * para manter a continuidade dos dados e funcionalidades do sistema ao transitar entre as telas.
+ */
 public class TelaIniciarCompra extends JFrame
 {
+    /**
+     * Construtor da classe {@link TelaIniciarCompra}.
+     *
+     * Responsável por construir a interface de início de compras, configurando
+     * o botão principal para "Fazer Pedido" e o botão "Sair". Define o layout visual
+     * e as propriedades da janela.
+     *
+     * @param stock Instância de {@link Estoque} utilizada para gerenciar os produtos.
+     * @param cashControl Instância de {@link Caixa} utilizada para controle financeiro.
+     * @param orders Instância de {@link ControlePedidos} utilizada para manipular os pedidos feitos.
+     */
     public TelaIniciarCompra(Estoque stock, Caixa cashControl, ControlePedidos orders)
     {
         setTitle("Iniciar Compras");
@@ -88,10 +117,5 @@ public class TelaIniciarCompra extends JFrame
 
         mainPanel.add(userButton, gbc);
         add(mainPanel);
-    }
-
-    public static void main(String[] args) {
-        TelaIniciarCompra telaIniciarCompra = new TelaIniciarCompra(null, null, null);
-        telaIniciarCompra.setVisible(true);
     }
 }

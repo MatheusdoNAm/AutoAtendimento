@@ -6,33 +6,36 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 /**
- * Gera a Tela Inicial do Sistema, com botões de acesso à área do Usuário ({@code JButton userButton}),
- * que leva para a Tela Principal do usuário, a Tela para Iniciar Compra ({@link TelaIniciarCompra}), e
- * acesso à área de Administração do sistema ({@code JButton admButton}), que leva para a Tela Principal
- * de Administração do Sistema, a Tela Admin ({@link TelaAdmin}).
+ * Tela Inicial do Sistema.
+ *
+ * A classe {@link TelaInicial} representa a primeira interface exibida ao usuário 
+ * ao abrir o sistema. Ela oferece duas opções principais de acesso:
+ * <ul>
+ *     <li>Acesso como usuário comum (cliente);</li>
+ *     <li>Acesso como administrador (requer login);</li>
+ * </ul>
+ *
+ * Ao selecionar uma das opções, o sistema encaminha para a tela correspondente:
+ * <ul>
+ *     <li>{@link TelaIniciarCompra} para usuários;</li>
+ *     <li>{@link TelaLogin} e, após autenticação, {@link TelaAdmin} para administradores.</li>
+ * </ul>
  * 
- * O Acesso a Tela de Administração do Sistema somente ocorrerá se o usuário realizar o login de 
- * administrador, que é entregue ao usuário, quando clica no botão {@code JButton admButton}, pela
- * {@link TelaLogin}.
+ * Utiliza instâncias das classes {@link Estoque}, {@link Caixa} e {@link ControlePedidos}
+ * para garantir continuidade dos dados entre as telas.
  */
 public class TelaInicial extends JFrame
 {
+
     /**
      * Construtor da classe {@link TelaInicial}.
+     *
+     * Responsável por construir a interface inicial, configurando os botões de acesso
+     * para usuário e administrador. Também define o layout visual da aplicação.
      * 
-     * Responsável por desenhar ao usuário toda a estrutura da tela, seus botões, realizar o controle
-     * e direcionamento dos botões e verificação de sucesso no login de administrador para direcionar
-     * o sistema para a {@link TelaAdmin}.
-     * 
-     * @param stock Objeto da classe {@link Estoque}, responsável por registrar todo o controle de 
-     * estoque do sistema. Iniciado na tela de Start do sistema ({@link StartApp}) e enviado como
-     * parâmetro por todo o sistema.
-     * @param cashControl Objeto da classe {@link Caixa}, responsável por registrar todo o controle de 
-     * Caixa do sistema. Iniciado na tela de Start do sistema ({@link StartApp}) e enviado como
-     * parâmetro por todo o sistema.
-     * @param orders Objeto da classe {@link ControlePedidos}, responsável por registrar todos os pedidos
-     * realizados no sistema. Iniciado na tela de Start do sistema ({@link StartApp}) e enviado como
-     * parâmetro por todo o sistema.
+     * @param stock Instância de {@link Estoque} utilizada para gerenciar os produtos.
+     * @param cashControl Instância de {@link Caixa} utilizada para controle financeiro.
+     * @param orders Instância de {@link ControlePedidos} utilizada para manipular os pedidos feitos.
      */
     public TelaInicial(Estoque stock, Caixa cashControl, ControlePedidos orders)
     {
@@ -113,9 +116,12 @@ public class TelaInicial extends JFrame
     }
 
     /**
-     * Método auxiliar para criação e configuração visual dos botões da Tela {@link TelaInicial}.
-     * @param text String que aparecerá no botão.
-     * @return retorna um {@link JButton} formatado visualmente.
+     * Método auxiliar para criação de botões estilizados usados na {@link TelaInicial}.
+     * 
+     * Configura cor de fundo, cor da fonte, fonte, borda e tamanho do botão.
+     *
+     * @param text Texto a ser exibido no botão.
+     * @return {@link JButton} estilizado e formatado para o layout da tela.
      */
     private JButton createCustomButton(String text)
     {

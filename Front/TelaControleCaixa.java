@@ -6,12 +6,44 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+/**
+ * Tela de Visualização e Controle do Caixa.
+ *
+ * A classe {@link TelaControleCaixa} exibe o estado atual do caixa do sistema,
+ * detalhando a quantidade de cada cédula e moeda disponível.
+ * Ela oferece opções para o administrador gerenciar o dinheiro no caixa.
+ *
+ * Funcionalidades principais:
+ * <ul>
+ * <li>Exibe o valor total em dinheiro no caixa.</li>
+ * <li>Mostra a contagem individual de cédulas (R$100, R$50, R$20, R$10, R$5, R$2)
+ * e moedas (R$1, R$0.50, R$0.25, R$0.10, R$0.05).</li>
+ * <li>Permite o acesso à tela para **adicionar dinheiro** ({@link TelaAdicionaCaixa}) ao caixa.</li>
+ * <li>Permite o acesso à tela para **remover dinheiro** ({@link TelaRemoveCaixa}) do caixa.</li>
+ * <li>Oferece um botão para retornar à tela de administração ({@link TelaAdmin}).</li>
+ * </ul>
+ *
+ * Utiliza instâncias das classes {@link Estoque}, {@link Caixa} e {@link ControlePedidos}
+ * para interagir com os dados do sistema, focando no controle financeiro.
+ */
 public class TelaControleCaixa extends JFrame
 {
     private JTextField bill100TextField, bill50TextField, bill20TextField, bill10TextField,
                     bill5TextField, bill2TextField, coin1TextField, coin50TextField, coin25TextField,
                     coin10TextField, coin5TextField;
 
+    /**
+     * Construtor da classe {@link TelaControleCaixa}.
+     *
+     * Responsável por construir a interface de controle de caixa, exibindo o total
+     * e as quantidades de cada denominação de dinheiro. Configura os botões para
+     * adicionar ou remover dinheiro e para retornar à tela anterior.
+     * Define o layout visual e as propriedades da janela.
+     *
+     * @param stock Instância de {@link Estoque} utilizada para gerenciar os produtos.
+     * @param cashControl Instância de {@link Caixa} utilizada para controle financeiro.
+     * @param orders Instância de {@link ControlePedidos} utilizada para manipular os pedidos feitos.
+     */
     public TelaControleCaixa(Estoque stock, Caixa cashRegister, ControlePedidos orders)
     {
         setTitle("Visualizar Caixa");
@@ -310,6 +342,14 @@ public class TelaControleCaixa extends JFrame
         add(mainPanel);
     }
 
+    /**
+     * Método auxiliar para criar um {@link JTextField} padronizado para exibir quantidades de dinheiro.
+     *
+     * O campo de texto é configurado como **não editável**, possui uma cor de fundo específica,
+     * uma borda de chanfro rebaixada e um tamanho preferencial fixo.
+     *
+     * @return Um {@link JTextField} configurado para exibição de valores.
+     */
     public JTextField createTextField()
     {
         JTextField textField = new JTextField();
@@ -321,6 +361,14 @@ public class TelaControleCaixa extends JFrame
         return textField;
     } 
 
+    /**
+     * Método auxiliar para criação de botões estilizados usados na {@link TelaControleCaixa}.
+     * 
+     * Configura cor de fundo, cor da fonte, fonte, borda e tamanho do botão.
+     *
+     * @param text Texto a ser exibido no botão.
+     * @return {@link JButton} estilizado e formatado para o layout da tela.
+     */
     public JButton createCustomButton (String text)
     {
         JButton button = new JButton(text);

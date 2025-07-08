@@ -6,13 +6,38 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+/**
+ * Tela para adicionar dinheiro ao caixa do sistema.
+ *
+ * A classe {@link TelaAdicionaCaixa} permite que o administrador adicione cédulas e moedas
+ * de diferentes valores ao caixa do sistema. A interface exibe o valor atual do caixa
+ * e campos de entrada para cada denominação de dinheiro, permitindo que o usuário
+ * especifique a quantidade a ser adicionada.
+ *
+ * Em caso de entrada inválida (não numérica), uma mensagem de erro é exibida.
+ *
+ * Utiliza instâncias das classes {@link Estoque}, {@link Caixa} e {@link ControlePedidos}
+ * para interagir com os dados do sistema, especialmente o controle de caixa.
+ */
 public class TelaAdicionaCaixa extends JDialog
 {
     private JTextField bill100TextField, bill50TextField, bill20TextField, bill10TextField,
                     bill5TextField, bill2TextField, coin1TextField, coin50TextField, coin25TextField,
                     coin10TextField, coin5TextField;
 
-    public TelaAdicionaCaixa(JFrame owner, Estoque stock, Caixa cashRegister, ControlePedidos orders)
+    /**
+     * Construtor da classe {@link TelaAdicionaCaixa}.
+     *
+     * Responsável por construir a interface de adição de dinheiro ao caixa,
+     * configurando os campos de entrada para cédulas e moedas e os botões de ação.
+     * Define o layout visual e as propriedades da janela de diálogo.
+     *
+     * @param owner O {@link JFrame} pai desta janela de diálogo.
+     * @param stock Instância de {@link Estoque} utilizada para gerenciar os produtos.
+     * @param cashControl Instância de {@link Caixa} utilizada para controle financeiro.
+     * @param orders Instância de {@link ControlePedidos} utilizada para manipular os pedidos feitos.
+     */
+    public TelaAdicionaCaixa(JFrame owner, Estoque stock, Caixa cashControl, ControlePedidos orders)
     {
         super(owner, "Adicionar no Caixa", true);
         setSize(480,450);
@@ -40,7 +65,7 @@ public class TelaAdicionaCaixa extends JDialog
         mainPanel.add(titleLabel, gbc);
 
         // -- Subtitle Label --
-        JLabel subtitleLabel = new JLabel("Caixa Atual: R$ " + String.format("%.2f", cashRegister.getTotalCash()));
+        JLabel subtitleLabel = new JLabel("Caixa Atual: R$ " + String.format("%.2f", cashControl.getTotalCash()));
         subtitleLabel.setFont(new Font("Arial", Font.BOLD, 15));
         gbc.gridy = 1;
         gbc.gridwidth = 1;
@@ -250,17 +275,17 @@ public class TelaAdicionaCaixa extends JDialog
                 System.out.println("Adicionando");
 
                 try {
-                    cashRegister.addCash(100.0, Integer.parseInt(bill100TextField.getText()));
-                    cashRegister.addCash(50.0, Integer.parseInt(bill50TextField.getText()));
-                    cashRegister.addCash(20.0, Integer.parseInt(bill20TextField.getText()));
-                    cashRegister.addCash(10.0, Integer.parseInt(bill10TextField.getText()));
-                    cashRegister.addCash(5.0, Integer.parseInt(bill5TextField.getText()));
-                    cashRegister.addCash(2.0, Integer.parseInt(bill2TextField.getText()));
-                    cashRegister.addCash(1.0, Integer.parseInt(coin1TextField.getText()));
-                    cashRegister.addCash(0.5, Integer.parseInt(coin50TextField.getText()));
-                    cashRegister.addCash(0.25, Integer.parseInt(coin25TextField.getText()));
-                    cashRegister.addCash(0.10, Integer.parseInt(coin10TextField.getText()));
-                    cashRegister.addCash(0.05, Integer.parseInt(coin5TextField.getText()));
+                    cashControl.addCash(100.0, Integer.parseInt(bill100TextField.getText()));
+                    cashControl.addCash(50.0, Integer.parseInt(bill50TextField.getText()));
+                    cashControl.addCash(20.0, Integer.parseInt(bill20TextField.getText()));
+                    cashControl.addCash(10.0, Integer.parseInt(bill10TextField.getText()));
+                    cashControl.addCash(5.0, Integer.parseInt(bill5TextField.getText()));
+                    cashControl.addCash(2.0, Integer.parseInt(bill2TextField.getText()));
+                    cashControl.addCash(1.0, Integer.parseInt(coin1TextField.getText()));
+                    cashControl.addCash(0.5, Integer.parseInt(coin50TextField.getText()));
+                    cashControl.addCash(0.25, Integer.parseInt(coin25TextField.getText()));
+                    cashControl.addCash(0.10, Integer.parseInt(coin10TextField.getText()));
+                    cashControl.addCash(0.05, Integer.parseInt(coin5TextField.getText()));
 
                     JOptionPane.showMessageDialog(TelaAdicionaCaixa.this,
                             "Cédulas adicionadas ao caixa!",
@@ -300,6 +325,14 @@ public class TelaAdicionaCaixa extends JDialog
         add(mainPanel);
     }
 
+    /**
+     * Método auxiliar para criar um {@link JTextField} padronizado para entrada de quantidades de dinheiro.
+     *
+     * O campo de texto é inicializado com "0", possui uma cor de fundo específica,
+     * uma borda de chanfro rebaixada e um tamanho preferencial fixo.
+     *
+     * @return Um {@link JTextField} configurado para entrada de valores monetários.
+     */
     public JTextField createTextField()
     {
         JTextField textField = new JTextField("0");
@@ -310,6 +343,14 @@ public class TelaAdicionaCaixa extends JDialog
         return textField;
     }
 
+    /**
+     * Método auxiliar para criação de botões estilizados usados na {@link TelaAdicionaCaixa}.
+     * 
+     * Configura cor de fundo, cor da fonte, fonte, borda e tamanho do botão.
+     *
+     * @param text Texto a ser exibido no botão.
+     * @return {@link JButton} estilizado e formatado para o layout da tela.
+     */
     public JButton createCustomButton (String text)
     {
         JButton button = new JButton(text);

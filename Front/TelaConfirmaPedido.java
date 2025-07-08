@@ -9,9 +9,46 @@ import javax.swing.table.JTableHeader;
 import java.awt.*;
 import java.util.Map;
 
+/**
+ * Tela de Confirmação do Pedido.
+ *
+ * A classe {@link TelaConfirmaPedido} é um diálogo modal que exibe os itens
+ * selecionados no carrinho de compras antes da finalização do pedido.
+ * Ela apresenta uma tabela com o nome do produto e a quantidade desejada,
+ * além do valor total da compra.
+ *
+ * Permite ao usuário:
+ * <ul>
+ * <li>Visualizar um resumo do pedido antes de prosseguir.</li>
+ * <li>Cancelar o pedido, retornando à tela inicial de compra ({@link TelaIniciarCompra}).</li>
+ * <li>Confirmar o pedido, que validará o estoque e, se houver disponibilidade,
+ * redirecionará para a tela de pagamento ({@link TelaPagamento}).</li>
+ * </ul>
+ *
+ * Em caso de estoque insuficiente para qualquer item no carrinho, o pedido
+ * é cancelado e uma mensagem de aviso é exibida.
+ *
+ * Utiliza instâncias das classes {@link Estoque}, {@link Caixa} e {@link ControlePedidos}
+ * para interagir com os dados do sistema e gerenciar o fluxo do pedido.
+ */
 public class TelaConfirmaPedido extends JDialog {
 
-    public TelaConfirmaPedido(JFrame owner, Map<Integer, Integer> cart, Estoque stock, Caixa cashControl, ControlePedidos orders) {
+    /**
+     * Construtor da classe {@link TelaConfirmaPedido}.
+     *
+     * Inicializa a interface de confirmação do pedido, construindo a tabela
+     * com os itens do carrinho, exibindo o total e configurando os botões de
+     * cancelar e confirmar.
+     *
+     * @param owner O {@link JFrame} pai desta janela de diálogo.
+     * @param cart Um {@link Map} representando o carrinho de compras, onde a chave é
+     * o código do produto e o valor é a quantidade desejada.
+     * @param stock Instância de {@link Estoque} utilizada para gerenciar os produtos.
+     * @param cashControl Instância de {@link Caixa} utilizada para controle financeiro.
+     * @param orders Instância de {@link ControlePedidos} utilizada para manipular os pedidos feitos.
+     */
+    public TelaConfirmaPedido(JFrame owner, Map<Integer, Integer> cart, Estoque stock, Caixa cashControl, ControlePedidos orders)
+    {
         super(owner, "Confirmação do Pedido", true);
         setSize(450, 320);
         setLocationRelativeTo(owner);

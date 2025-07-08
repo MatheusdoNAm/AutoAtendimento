@@ -2,15 +2,39 @@ package Front;
 import Back.*;
 import javax.swing.*;
 import javax.swing.border.BevelBorder;
-
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+/**
+ * Tela para adicionar quantidade a um item existente no estoque.
+ *
+ * A classe {@link TelaAdicionaEstoque} permite ao usuário (administrador)
+ * especificar o código de um produto e a quantidade a ser adicionada ao seu estoque.
+ * A interface valida se os campos foram preenchidos corretamente e se a quantidade
+ * é um valor positivo. Caso o produto não seja encontrado, uma mensagem de erro é exibida.
+ *
+ * Esta tela é um {@link JDialog} modal, o que significa que bloqueia a interação
+ * com a tela pai enquanto estiver aberta.
+ *
+ * Utiliza instâncias das classes {@link Estoque} e {@link Caixa} para interagir
+ * com os dados do sistema.
+ */
 public class TelaAdicionaEstoque extends JDialog
 {
     private JTextField codeTextField, quantityTextField;
 
+    /**
+     * Construtor da classe {@link TelaAdicionaEstoque}.
+     *
+     * Responsável por construir a interface de adição de estoque, configurando
+     * os campos de entrada para o código do produto e a quantidade, além dos botões de ação.
+     * Define o layout visual e as propriedades da janela de diálogo.
+     *
+     * @param owner O {@link JFrame} pai desta janela de diálogo, tipicamente a {@link TelaEditaEstoque}.
+     * @param stock Instância de {@link Estoque} utilizada para gerenciar os produtos.
+     * @param cashControl Instância de {@link Caixa} utilizada para controle financeiro.
+     */
     public TelaAdicionaEstoque (JFrame owner, Estoque stock, Caixa cashControl)
     {
         super(owner, "Adiciona Estoque de um Item", true);
@@ -173,6 +197,14 @@ public class TelaAdicionaEstoque extends JDialog
         add(mainPanel);
     }
 
+    /**
+     * Método auxiliar para criação de botões estilizados usados na {@link TelaAdicionaEstoque}.
+     * 
+     * Configura cor de fundo, cor da fonte, fonte, borda e tamanho do botão.
+     *
+     * @param text Texto a ser exibido no botão.
+     * @return {@link JButton} estilizado e formatado para o layout da tela.
+     */
     public JButton createCustomButton (String text)
     {
         JButton button = new JButton(text);

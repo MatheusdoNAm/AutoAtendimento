@@ -5,8 +5,34 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+/**
+ * Tela principal de Administração do Sistema.
+ * 
+ * A classe {@link TelaAdmin} representa a interface gráfica que será exibida ao usuário 
+ * após a autenticação bem-sucedida do administrador. Essa interface permite ao usuário:
+ * <ul>
+ *     <li>Cadastrar novos itens no sistema;</li>
+ *     <li>Visualizar e gerenciar o estoque atual;</li>
+ *     <li>Acessar o controle de caixa;</li>
+ *     <li>Gerar relatórios;</li>
+ *     <li>Retornar à tela inicial.</li>
+ * </ul>
+ * 
+ * Utiliza instâncias das classes {@link Estoque}, {@link Caixa} e {@link ControlePedidos}
+ * para realizar a gestão de dados do sistema.
+ */
 public class TelaAdmin extends JFrame
 {
+    /**
+     * Construtor da classe {@link TelaAdmin}.
+     * 
+     * Responsável por construir a estrutura da interface de administração, com botões de
+     * navegação para diferentes funcionalidades e integração com os objetos centrais do sistema.
+     * 
+     * @param stock Instância de {@link Estoque} utilizada para gerenciar os produtos.
+     * @param cashControl Instância de {@link Caixa} utilizada para controle financeiro.
+     * @param orders Instância de {@link ControlePedidos} utilizada para manipular os pedidos feitos.
+     */
     public TelaAdmin(Estoque stock, Caixa cashControl, ControlePedidos orders)
     {
         setTitle("Tela de Administração");
@@ -139,6 +165,14 @@ public class TelaAdmin extends JFrame
         add(mainPanel);
     }
 
+    /**
+     * Método auxiliar para criação de botões estilizados usados na {@link TelaAdmin}.
+     * 
+     * Configura cor de fundo, cor da fonte, fonte, borda e tamanho do botão.
+     *
+     * @param text Texto a ser exibido no botão.
+     * @return {@link JButton} estilizado e formatado para o layout da tela.
+     */
     private JButton createCustomButton(String text)
     {
         JButton button = new JButton(text);

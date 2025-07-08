@@ -6,8 +6,45 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Map;
 
+/**
+ * Tela de Pagamento do Pedido.
+ *
+ * A classe {@link TelaPagamento} é um diálogo modal responsável por processar
+ * a escolha da forma de pagamento do pedido. Ela exibe o número do pedido, a
+ * quantidade total de itens e o valor total a ser pago.
+ *
+ * Funcionalidades principais:
+ * <ul>
+ * <li>Exibição do número do pedido, total de itens e valor total.</li>
+ * <li>Opções de seleção para formas de pagamento: Dinheiro, Cartão e Pix.</li>
+ * <li>Botão "Voltar" para retornar à {@link TelaConfirmaPedido}.</li>
+ * <li>Botão "Cancelar" para cancelar o pedido e retornar à {@link TelaIniciarCompra}.</li>
+ * <li>Botão "Confirmar Pagamento" que, dependendo da forma de pagamento,
+ * finaliza o pedido diretamente (Cartão/Pix) ou redireciona para
+ * a tela específica de pagamento em dinheiro ({@link TelaPagamentoDinheiro}).</li>
+ * </ul>
+ *
+ * Garante que uma forma de pagamento seja selecionada antes de prosseguir.
+ *
+ * Utiliza instâncias das classes {@link Estoque}, {@link Caixa}, {@link ControlePedidos}
+ * e {@link Pedido} para gerenciar a transação, atualizar o estoque e registrar o pedido.
+ */
 public class TelaPagamento extends JDialog
 {
+    /**
+     * Construtor da classe {@link TelaPagamento}.
+     *
+     * Inicializa a interface de pagamento, exibindo os detalhes do pedido,
+     * as opções de forma de pagamento e os botões de ação. Define o layout visual
+     * e as propriedades da janela de diálogo.
+     *
+     * @param owner O {@link JFrame} pai desta janela de diálogo.
+     * @param cart Um {@link Map} representando o carrinho de compras, contendo o código do produto e a quantidade.
+     * @param stock Instância de {@link Estoque} utilizada para gerenciar os produtos.
+     * @param cashControl Instância de {@link Caixa} utilizada para controle financeiro.
+     * @param orders Instância de {@link ControlePedidos} utilizada para manipular os pedidos feitos.
+     * @param order Instância de {@link Pedido} contendo os detalhes do pedido atual.
+     */
     public TelaPagamento(JFrame owner, Map<Integer, Integer> cart, Estoque stock, Caixa cashControl, ControlePedidos orders, Pedido order)
     {
         super(owner, "Tela de Pagamento", true);
@@ -222,6 +259,14 @@ public class TelaPagamento extends JDialog
         add(mainPanel);
     }
 
+    /**
+     * Método auxiliar para criação de botões estilizados usados na {@link TelaPagamento}.
+     * 
+     * Configura cor de fundo, cor da fonte, fonte, borda e tamanho do botão.
+     *
+     * @param text Texto a ser exibido no botão.
+     * @return {@link JButton} estilizado e formatado para o layout da tela.
+     */
     public JButton createCustomButton(String text)
     {
         JButton button = new JButton(text);
@@ -236,6 +281,15 @@ public class TelaPagamento extends JDialog
         return button;
     }
 
+    /**
+     * Método auxiliar para criar um {@link JRadioButton} estilizado para seleção de formas de pagamento.
+     *
+     * Configura a cor do texto, fonte e desativa o foco de pintura e a borda
+     * para uma aparência limpa e padronizada.
+     *
+     * @param text O texto a ser exibido no botão de rádio.
+     * @return Um {@link JRadioButton} configurado com o estilo definido.
+     */
     public JRadioButton createSelectButton(String text)
     {
         JRadioButton button = new JRadioButton(text);

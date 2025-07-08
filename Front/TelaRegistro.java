@@ -11,12 +11,47 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
+/**
+ * Tela de Registro de Novo Item no Estoque.
+ *
+ * A classe {@link TelaRegistro} é um diálogo modal que permite ao administrador
+ * cadastrar novos produtos no sistema de estoque. Ela oferece campos para inserir
+ * o código, nome, tipo (selecionável por combobox), preço e data de validade
+ * do produto.
+ *
+ * A tela realiza validações para garantir que:
+ * <ul>
+ * <li>Todos os campos obrigatórios sejam preenchidos.</li>
+ * <li>O código seja um número inteiro válido.</li>
+ * <li>O preço seja um número decimal válido.</li>
+ * <li>A data de validade, se preenchida, esteja no formato correto (DD/MM/AAAA)
+ * e não seja uma data passada.</li>
+ * <li>O código do produto a ser cadastrado ainda não esteja em uso.</li>
+ * </ul>
+ *
+ * Após o registro bem-sucedido, os campos são limpos para um novo cadastro.
+ *
+ * Esta tela é um {@link JDialog} modal, o que significa que bloqueia a interação
+ * com a tela pai enquanto estiver aberta.
+ *
+ * Utiliza uma instância da classe {@link Estoque} para realizar a operação de registro de produtos.
+ */
 public class TelaRegistro extends JDialog
 {
     JTextField codeTextField, nameTextField, priceTextField;
     JFormattedTextField dateTextField;
     String type;
 
+    /**
+     * Construtor da classe {@link TelaRegistro}.
+     *
+     * Inicializa a interface de registro de produtos, configurando os campos de entrada,
+     * o combobox para tipo, o campo formatado para data e os botões de ação (Salvar e Voltar).
+     * Define o layout visual e as propriedades da janela de diálogo.
+     *
+     * @param owner O {@link JFrame} pai desta janela de diálogo.
+     * @param stock Instância de {@link Estoque} utilizada para gerenciar os produtos.
+     */
     public TelaRegistro(JFrame owner, Estoque stock)
     {
         super(owner, "Tela Registro", true);
@@ -274,6 +309,14 @@ public class TelaRegistro extends JDialog
         add(mainPanel);
     }
 
+    /**
+     * Método auxiliar para criação de botões estilizados usados na {@link TelaRegistro}.
+     * 
+     * Configura cor de fundo, cor da fonte, fonte, borda e tamanho do botão.
+     *
+     * @param text Texto a ser exibido no botão.
+     * @return {@link JButton} estilizado e formatado para o layout da tela.
+     */
     public JButton createCustomButton (String text)
     {
         JButton button = new JButton(text);

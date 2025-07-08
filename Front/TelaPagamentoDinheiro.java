@@ -7,12 +7,50 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Map;
 
+/**
+ * Tela de Pagamento em Dinheiro.
+ *
+ * A classe {@link TelaPagamentoDinheiro} é um diálogo modal que permite ao usuário
+ * inserir a quantidade de cédulas e moedas que está pagando por um pedido.
+ * Ela calcula o valor total inserido, verifica se é suficiente para cobrir
+ * o valor do pedido e tenta calcular o troco necessário.
+ *
+ * Funcionalidades principais:
+ * <ul>
+ * <li>Exibição do valor total do pedido.</li>
+ * <li>Campos de entrada para que o usuário informe a quantidade de cada denominação
+ * de cédula e moeda utilizada no pagamento.</li>
+ * <li>Validação do valor inserido em relação ao total do pedido, alertando em caso de insuficiência.</li>
+ * <li>Verificação da disponibilidade de troco no caixa.</li>
+ * <li>Em caso de pagamento e troco bem-sucedidos, finaliza o pedido, atualiza
+ * o estoque e o caixa, e retorna à tela inicial de compra ({@link TelaIniciarCompra}).</li>
+ * <li>Botão "Cancelar" que retorna à tela de Iniciar uma Compra ({@link TelaIniciarCompra}).
+ * </li>
+ * </ul>
+ *
+ * Utiliza instâncias das classes {@link Estoque}, {@link Caixa}, {@link ControlePedidos}
+ * e {@link Pedido} para gerenciar o processo de pagamento e atualização dos dados do sistema.
+ */
 public class TelaPagamentoDinheiro extends JDialog
 {
     private JTextField bill100TextField, bill50TextField, bill20TextField, bill10TextField,
                     bill5TextField, bill2TextField, coin1TextField, coin50TextField, coin25TextField,
                     coin10TextField, coin5TextField;
 
+    /**
+     * Construtor da classe {@link TelaPagamentoDinheiro}.
+     *
+     * Inicializa a interface de pagamento em dinheiro, exibindo o valor do pedido
+     * e os campos para entrada das cédulas e moedas. Configura os botões para
+     * confirmar o pagamento e para Cancelar. Define o layout visual e as propriedades da janela.
+     *
+     * @param owner O {@link JFrame} pai desta janela de diálogo.
+     * @param cart Um {@link Map} representando o carrinho de compras, contendo o código do produto e a quantidade.
+     * @param stock Instância de {@link Estoque} utilizada para gerenciar os produtos.
+     * @param cashControl Instância de {@link Caixa} utilizada para controle financeiro.
+     * @param orders Instância de {@link ControlePedidos} utilizada para manipular os pedidos feitos.
+     * @param order Instância de {@link Pedido} contendo os detalhes do pedido atual.
+     */
     public TelaPagamentoDinheiro(JFrame owner, Map<Integer, Integer> cart, Estoque stock, Caixa cashControl, ControlePedidos orders, Pedido order)
     {
         super(owner, "Pagamento com Dinheiro", true);
@@ -334,22 +372,24 @@ public class TelaPagamentoDinheiro extends JDialog
             
         });
             
-        // -- Back Button --
-        JButton backButton = createCustomButton("Voltar");
-        backButton.setPreferredSize(new Dimension(80, 30));
+        // -- Cancel Button --
+        JButton cancelButton = createCustomButton("Cancelar");
+        cancelButton.setPreferredSize(new Dimension(80, 30));
         gbc.anchor = GridBagConstraints.EAST;
         gbc.gridx = 2;
-        mainPanel.add(backButton, gbc);
+        mainPanel.add(cancelButton, gbc);
 
-        backButton.addActionListener(new ActionListener()
+        cancelButton.addActionListener(new ActionListener()
         {
             @Override
             public void actionPerformed(ActionEvent e)
             {
                 System.out.println("Voltando");
-                TelaAdmin telaAdmin = new TelaAdmin(stock, cashControl, orders);
-                telaAdmin.setVisible(true);
-                dispose();
+                Pedido.setOrderGlobalNumber(Pedido.getOrderGlobalNumber() - 1);
+                TelaIniciarCompra telaIniciarCompra = new TelaIniciarCompra(stock, cashControl, orders);
+                telaIniciarCompra.setVisible(true);
+                owner.dispose();
+                dispose();   
             }
             
         });
@@ -357,6 +397,14 @@ public class TelaPagamentoDinheiro extends JDialog
         add(mainPanel);
     }
 
+    /**
+     * Método auxiliar para criar um {@link JTextField} padronizado para entrada de quantidades de dinheiro.
+     *
+     * O campo de texto é inicializado com "0", possui uma cor de fundo específica,
+     * uma borda de chanfro rebaixada e um tamanho preferencial fixo.
+     *
+     * @return Um {@link JTextField} configurado para entrada de valores monetários.
+     */
     public JTextField createTextField()
     {
         JTextField textField = new JTextField("0");
@@ -367,6 +415,14 @@ public class TelaPagamentoDinheiro extends JDialog
         return textField;
     }
 
+    /**
+     * Método auxiliar para criação de botões estilizados usados na {@link TelaPagamentoDinheiro}.
+     * 
+     * Configura cor de fundo, cor da fonte, fonte, borda e tamanho do botão.
+     *
+     * @param text Texto a ser exibido no botão.
+     * @return {@link JButton} estilizado e formatado para o layout da tela.
+     */
     public JButton createCustomButton (String text)
     {
         JButton button = new JButton(text);
@@ -375,7 +431,7 @@ public class TelaPagamentoDinheiro extends JDialog
         button.setBackground(new Color(0,86,179));
         button.setFont(new Font("Arial", Font.BOLD, 13));
         button.setFocusPainted(false);
-        button.setPreferredSize(new Dimension(160, 30));
+        button.setPreferredSize(new Dimension(170, 30));
         button.setBorderPainted(false);
         button.setFocusPainted(false);
 
