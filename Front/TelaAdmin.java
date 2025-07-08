@@ -120,6 +120,9 @@ public class TelaAdmin extends JFrame
             public void actionPerformed(ActionEvent e)
             {
                 System.out.println("Relatórios");
+                TelaRelatorio telaRelatorio = new TelaRelatorio(stock, cashControl, orders);
+                telaRelatorio.setVisible(true);
+                dispose();
             }
             
         });
